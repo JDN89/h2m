@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/JDN89/h2m/lexer"
 	"io"
 	"net/http"
 )
@@ -17,6 +18,9 @@ func main() {
 	if err != nil {
 		fmt.Println("Error reading contents of response body")
 	}
+
+	l := lexer.New(string(body))
+
 	fmt.Println("Fetched HTML:")
-	fmt.Println(string(body))
+	fmt.Println("input lexer", l.Input)
 }
