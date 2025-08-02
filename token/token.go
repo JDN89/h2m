@@ -1,13 +1,17 @@
 package token
 
-type TokenType string;
+type TokenType string
 
-type Token struct{
-TokenType string
-pos int
+type Token struct {
+	Type TokenType
+	Pos  int
 }
 
 const (
-	GT = ">";
-	LT = "<"
+	GT         = TokenType(">")
+	LT         = TokenType("<")
+	SLASH      = TokenType("/")
+	DIV        = TokenType("div")
+	OPEN_DIV   = TokenType("<div>")
+	CLOSED_DIV = TokenType("</div>")
 )

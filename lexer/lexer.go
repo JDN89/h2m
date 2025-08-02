@@ -1,6 +1,6 @@
 package lexer
 
-import(	"github.com/JDN89/h2m/token"
+import(	"h2m/token"
 )
 
 
@@ -26,6 +26,15 @@ func (l *Lexer) readChar() {
 	}
 	l.curr = l.next
 	l.next ++
+}
+
+func (l *Lexer) nextToken() token.Token {
+	token:= token.Token {
+		Type:token.LT,
+		Pos: 5,
+	}
+	return token
+
 }
 
 //TODO define tokens

@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/JDN89/h2m/lexer"
+	"h2m/lexer"
 	"io"
 	"net/http"
 )
