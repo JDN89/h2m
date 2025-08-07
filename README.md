@@ -27,26 +27,25 @@ Learned about writing and running tests in Go, packages, ...
 ### Mapping html to markdown
 ### HTML to Markdown Tag Mapping
 
-
-| HTML Tag                   | Markdown Equivalent                          |
-|----------------------------|----------------------------------------------------------------------------------------------------|
-| `<h1>`                     | `# Heading`                                   Add `#` symbols equal to heading level               |
-| `<h2>`                     | `## Heading`                                | 
-| `<h3>`                     | `### Heading`                               | 
-| `<h4>`                     | `#### Heading`                              | 
-| `<h5>`                     | `##### Heading`                             | 
-| `<h6>`                     | `###### Heading`                            | 
-| `<p>`                      | *(blank line)*                              | 
-| `<br>`                     | `  ` (2 spaces) or `\`                      | 
-| `<strong>`, `<b>`          | `**bold**` or `__bold__`                | 
-| `<em>`, `<i>`              | `*italic*` or `_italic_`                    | 
-| `<u>`                      | *(no equivalent)*                           | 
-| `<del>`, `<s>`, `<strike>` | `~~strikethrough~~`                         | 
-| `<a href="url">text</a>`   | `[text](url)`                               | 
-| `<img src="url" alt="">`   | `![alt](url)`                               | 
-| `<ul>`                     | *(wraps list items)*                        | 
-| `<ol>`                     | *(wraps list items)*                        | 
-| `<li>`                     | `- item` or `* item` or `1. item`         | 
+| HTML Tag                   | Markdown Equivalent                          | Notes                                                |
+|----------------------------|----------------------------------------------|------------------------------------------------------|
+| `<h1>`                     | `# Heading`                                  | Add `#` symbols equal to heading level               |
+| `<h2>`                     | `## Heading`                                 |                                                      |
+| `<h3>`                     | `### Heading`                                |                                                      |
+| `<h4>`                     | `#### Heading`                               |                                                      |
+| `<h5>`                     | `##### Heading`                              |                                                      |
+| `<h6>`                     | `###### Heading`                             |                                                      |
+| `<p>`                      | *(blank line)*                               | Paragraphs are separated by a blank line             |
+| `<br>`                     | `  ` (2 spaces) or `\`                       | Line break                                           |
+| `<strong>`, `<b>`          | `**bold**` or `__bold__`                     | Bold text                                            |
+| `<em>`, `<i>`              | `*italic*` or `_italic_`                     | Italic text                                          |
+| `<u>`                      | *(no equivalent)*                            | Use raw HTML: `<u>text</u>`                          |
+| `<del>`, `<s>`, `<strike>` | `~~strikethrough~~`                          | Strikethrough                                        |
+| `<a href="url">text</a>`   | `[text](url)`                                | Hyperlink                                            |
+| `<img src="url" alt="">`   | `![alt](url)`                                | Image                                                |
+| `<ul>`                     | *(wraps list items)*                         | Used for unordered lists                             |
+| `<ol>`                     | *(wraps list items)*                         | Used for ordered lists                               |
+| `<li>`                     | `- item` or `* item` or `1. item`            | List item                                            |
 | `<code>`                   | `` `inline code` ``                          | Inline code                                          |
 | `<pre><code>`              | \`\`\`code block\`\`\`                       | Fenced code block                                    |
 | `<pre>`                    | Indent with 4 spaces or fenced code block    | Often used with `<code>`                             |
