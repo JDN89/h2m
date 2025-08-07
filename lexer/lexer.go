@@ -1,41 +1,78 @@
 package lexer
 
-import(	"h2m/token"
+import (
+	"fmt"
+	"h2m/token"
 )
 
-
-//TODO make input private. Now public for debug purposes
+// TODO make input private. Now public for debug purposes
 type Lexer struct {
 	Input string
+	start int
 	curr  int
-	next  int
 	char  byte
 }
 
 func New(input string) *Lexer {
 	l := &Lexer{Input: input}
+	//load one char in l.char
 	l.readChar()
 	return l
 }
 
 func (l *Lexer) readChar() {
-	if l.next >= len(l.Input) {
+	fmt.Printf("inside readchar function %c \n",l.char)
+	if l.curr >= len(l.Input) {
 		l.char = 0
 	} else {
-		l.char = l.Input[l.next]
+		l.char = l.Input[l.curr]
 	}
-	l.curr = l.next
-	l.next ++
+	l.curr++
+	return
 }
+
+func  isChar(char byte) bool {
+	return char >='a' && char <='z' || char >= 'A' && char <='Z'
+}
+
 
 func (l *Lexer) nextToken() token.Token {
-	token:= token.Token {
-		Type:token.LT,
-		Pos: 5,
-	}
-	return token
+	// current doesn't advance so we know the start position (curr) and end position (curr) of a token
 
+	l.start = l.curr
+	switch l.char {
+	case '<':
+		fmt.Println("< found")
+		l.readChar()
+		break
+	case '/':
+		fmt.Println("/ found")
+		l.readChar()
+		break
+	case '>':
+		fmt.Println("> found. Make token")
+		l.readChar()
+		break
+	default:
+		if isChar(l.char) {
+			fmt.Printf("char found %c \n",l.char)
+			//NOTE I prefer to not call readchar in the isChar funciton so it's more explicit as to whereI'm call the is readchar function
+			l.readChar()
+			break
+		}
+		fmt.Println("no char found")
+		break
+
+	}
+	token := token.Token{
+		Type: token.LT,
+		Pos:  5}
+	return token
 }
+
+// latest TODO: <div>  make token when you encounter > or </
+// debug and see why test doesn't print a char
+//look at video of tj to see how to debug go code in neovim
 
 //TODO define tokens
 // Type and position in input stream

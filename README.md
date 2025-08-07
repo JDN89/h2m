@@ -2,6 +2,7 @@
 
 A tool that converts HTML (primarily from blogs) into Markdown.
 The concept is to input a URL into the CLI tool, which then saves the Markdown file to the ~/Documents folder.
+I know there are (better) tools out there but this is just a hobby project to learn golang.
 
 ## TODO
 - [ ] install an LSP for markdown. I'm getting randomg error messaged in README.md... (nvim releated)
