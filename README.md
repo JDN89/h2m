@@ -23,38 +23,36 @@ Learned about writing and running tests in Go, packages, ...
 [What is an idiomatic way of representing enums in Go?](https://stackoverflow.com/questions/14426366/what-is-an-idiomatic-way-of-representing-enums-in-go)
 [Learning Go, and the `type` keyword is incredibly powerful and makes code more readable](https://www.reddit.com/r/golang/comments/1at369q/learning_go_and_the_type_keyword_is_incredibly/?share_id=o6o5D80TE1fQ8s9dnDslU&utm_content=2&utm_medium=android_app&utm_name=androidcss&utm_source=share&utm_term=2)
 
-
 ### Mapping html to markdown
-### HTML to Markdown Tag Mapping
 
-| HTML Tag                   | Markdown Equivalent                          | Notes                                                |
-|----------------------------|----------------------------------------------|------------------------------------------------------|
-| `<h1>`                     | `# Heading`                                  | Add `#` symbols equal to heading level               |
-| `<h2>`                     | `## Heading`                                 |                                                      |
-| `<h3>`                     | `### Heading`                                |                                                      |
-| `<h4>`                     | `#### Heading`                               |                                                      |
-| `<h5>`                     | `##### Heading`                              |                                                      |
-| `<h6>`                     | `###### Heading`                             |                                                      |
-| `<p>`                      | *(blank line)*                               | Paragraphs are separated by a blank line             |
-| `<br>`                     | `  ` (2 spaces) or `\`                       | Line break                                           |
-| `<strong>`, `<b>`          | `**bold**` or `__bold__`                     | Bold text                                            |
-| `<em>`, `<i>`              | `*italic*` or `_italic_`                     | Italic text                                          |
-| `<u>`                      | *(no equivalent)*                            | Use raw HTML: `<u>text</u>`                          |
-| `<del>`, `<s>`, `<strike>` | `~~strikethrough~~`                          | Strikethrough                                        |
-| `<a href="url">text</a>`   | `[text](url)`                                | Hyperlink                                            |
-| `<img src="url" alt="">`   | `![alt](url)`                                | Image                                                |
-| `<ul>`                     | *(wraps list items)*                         | Used for unordered lists                             |
-| `<ol>`                     | *(wraps list items)*                         | Used for ordered lists                               |
-| `<li>`                     | `- item` or `* item` or `1. item`            | List item                                            |
-| `<code>`                   | `` `inline code` ``                          | Inline code                                          |
-| `<pre><code>`              | \`\`\`code block\`\`\`                       | Fenced code block                                    |
-| `<pre>`                    | Indent with 4 spaces or fenced code block    | Often used with `<code>`                             |
-| `<blockquote>`             | `> quoted text`                              | Quote block                                          |
-| `<hr>`                     | `---` or `***`                               | Horizontal rule                                      |
-| `<table>`                  | Pipe-based table                             | See `<tr>`, `<th>`, `<td>`                           |
-| `<tr>`                     | `| row | row |`                              | Table row                                            |
-| `<th>`                     | `| Header |` with `| --- |` below            | Table header cell                                    |
-| `<td>`                     | `| Cell |`                                   | Table data cell                                      |
-| `<div>`, `<span>`          | *(no equivalent)*                            | Often ignored or passed as raw HTML                 |
-| `<iframe>`, `<script>`     | *(no equivalent)*                            | Usually ignored or kept as raw HTML                  |
+| HTML Tag                   | Markdown Equivalent         |
+|----------------------------|-----------------------------|
+| `<h1>`                     | `#`                         |
+| `<h2>`                     | `##`                        |
+| `<h3>`                     | `###`                       |
+| `<h4>`                     | `####`                      |
+| `<h5>`                     | `#####`                     |
+| `<h6>`                     | `######`                    |
+| `<p>`                      | (blank line)                |
+| `<br>`                     | `  ` or `\`                |
+| `<strong>`, `<b>`          | `**` or `__`                |
+| `<em>`, `<i>`              | `*` or `_`                  |
+| `<u>`                      | *(none)*                    |
+| `<del>`, `<s>`, `<strike>` | `~~`                        |
+| `<a>`                      | `[]()`                      |
+| `<img>`                    | `![]()`                     |
+| `<ul>`                     | `-` or `*`                  |
+| `<ol>`                     | `1.`                        |
+| `<li>`                     | `-`, `*`, or `1.`           |
+| `<code>`                   | `` ` ``                     |
+| `<pre><code>`              | ```` ``` ````               |
+| `<pre>`                    | (indented or fenced)        |
+| `<blockquote>`             | `>`                         |
+| `<hr>`                     | `---` or `***`              |
+| `<table>`                  | `|`                         |
+| `<tr>`                     | `|`                         |
+| `<th>`                     | `|` + `---`                 |
+| `<td>`                     | `|`                         |
+| `<div>`, `<span>`          | *(none)*                    |
+| `<iframe>`, `<script>`     | *(none)*                    |
 
