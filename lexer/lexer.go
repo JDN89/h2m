@@ -7,10 +7,11 @@ import (
 
 // TODO make input private. Now public for debug purposes
 type Lexer struct {
-	Input string
-	start int
-	curr  int
-	char  byte
+	Input    string
+	startPos int
+	currPos  int
+	char     byte
+	start    bool
 }
 
 func New(input string) *Lexer {
@@ -21,25 +22,33 @@ func New(input string) *Lexer {
 }
 
 func (l *Lexer) readChar() {
-	fmt.Printf("inside readchar function %c \n",l.char)
-	if l.curr >= len(l.Input) {
+	fmt.Printf("inside readchar function %c \n", l.char)
+	if l.currPos >= len(l.Input) {
 		l.char = 0
 	} else {
-		l.char = l.Input[l.curr]
+		l.char = l.Input[l.currPos]
 	}
-	l.curr++
+	l.currPos++
 	return
 }
 
-func  isChar(char byte) bool {
-	return char >='a' && char <='z' || char >= 'A' && char <='Z'
+func isChar(char byte) bool {
+	return char >= 'a' && char <= 'z' || char >= 'A' && char <= 'Z'
 }
 
-
-func (l *Lexer) nextToken() token.Token {
+func (l *Lexer) NextToken() token.Token {
 	// current doesn't advance so we know the start position (curr) and end position (curr) of a token
 
-	l.start = l.curr
+	l.startPos = l.currPos
+
+	// as long start == false keep reading char
+	// check encounter <article>
+	// set start == true
+	for l.start == false {
+		// TODO stop parsing if we reach end of file and never encounter article
+
+	}
+
 	switch l.char {
 	case '<':
 		fmt.Println("< found")
@@ -55,7 +64,7 @@ func (l *Lexer) nextToken() token.Token {
 		break
 	default:
 		if isChar(l.char) {
-			fmt.Printf("char found %c \n",l.char)
+			fmt.Printf("char found %c \n", l.char)
 			//NOTE I prefer to not call readchar in the isChar funciton so it's more explicit as to whereI'm call the is readchar function
 			l.readChar()
 			break

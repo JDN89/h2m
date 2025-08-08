@@ -20,6 +20,8 @@ func main() {
 	}
 
 	l := lexer.New(string(body))
+	// TODO call nextToken once I Encounter token article <article> start lexing (bool flag)
+	//stop once we encounter <article>
 
 	fmt.Println("Fetched HTML:")
 	fmt.Println("input lexer", l.Input)
