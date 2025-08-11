@@ -6,9 +6,9 @@ import (
 )
 
 func TestGetNextToken(t *testing.T) {
-	input := "<div> content </div>"
+	input := "<article>"
 
-	expectedTokens := [3]token.TokenType{token.OPEN_DIV, token.CLOSED_DIV, token.CLOSED_DIV}
+	expectedTokens := [1]token.TokenType{token.OPEN_ARTICLE}
 
 	l := New(input)
 

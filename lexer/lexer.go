@@ -3,6 +3,7 @@ package lexer
 import (
 	"fmt"
 	"h2m/token"
+	"log"
 )
 
 // TODO make input private. Now public for debug purposes
@@ -29,14 +30,50 @@ func (l *Lexer) readChar() {
 		l.char = l.Input[l.currPos]
 	}
 	l.currPos++
-	return
+}
+
+func (l *Lexer) peek() byte {
+	//BUG here
+	// if l.currPos == len(l.Input) {
+	// 	fmt.Printf("At end of input %c can't peek! \n", l.Input[l.currPos])
+	// }
+	return l.char
+}
+
+func (l *Lexer) peekNext() byte {
+	if l.currPos == len(l.Input) {
+		fmt.Printf("At end of input %c can't peek! \n", l.Input[l.currPos])
+	}
+	return l.Input[l.currPos]
 }
 
 func isChar(char byte) bool {
 	return char >= 'a' && char <= 'z' || char >= 'A' && char <= 'Z'
 }
 
+func (l *Lexer) makeToken() token.Token {
+	ref := l.Input[l.startPos:l.currPos]
+	var o string = string(ref)
+	var ttype = token.HtmlReferenceTokenMap[o]
+	// TODO do I need a pointer?
+	return token.Token{Type: ttype, Pos: l.startPos}
+}
+
+// NOTE I am not making tokens for the content between the tags, because I can assume the start and end based on the html tags start and end positions, plus I don't have to manipulate the content. Only the tags
+
+func (l *Lexer) readReference() {
+	for isChar(l.char) {
+		l.readChar()
+	}
+	if l.peek() == '>' {
+		l.readChar()
+	} else {
+		log.Panic("Expected >")
+	}
+}
+
 func (l *Lexer) NextToken() token.Token {
+
 	// current doesn't advance so we know the start position (curr) and end position (curr) of a token
 
 	l.startPos = l.currPos
@@ -44,39 +81,58 @@ func (l *Lexer) NextToken() token.Token {
 	// as long start == false keep reading char
 	// check encounter <article>
 	// set start == true
+
+	// NOTE no pointer because the struct is very small.
+	// TODO test impact of using pointer once project is finished
+	tok := token.Token{}
+
 	for l.start == false {
+		switch l.char {
+
+		case '<':
+			//NOTE consume '<'
+			l.readChar()
+			l.readReference()
+			tok = l.makeToken()
+			if tok.Type == token.OPEN_ARTICLE {
+				l.start = true
+			}
+
 		// TODO stop parsing if we reach end of file and never encounter article
+		default:
+			l.readChar()
+		}
 
 	}
-
-	switch l.char {
-	case '<':
-		fmt.Println("< found")
-		l.readChar()
-		break
-	case '/':
-		fmt.Println("/ found")
-		l.readChar()
-		break
-	case '>':
-		fmt.Println("> found. Make token")
-		l.readChar()
-		break
-	default:
-		if isChar(l.char) {
-			fmt.Printf("char found %c \n", l.char)
-			//NOTE I prefer to not call readchar in the isChar funciton so it's more explicit as to whereI'm call the is readchar function
+	for l.start == true {
+		// TODO: implement make tokens for the other element references;
+		switch l.char {
+		case '<':
+			fmt.Println("< found")
 			l.readChar()
 			break
+		case '/':
+			fmt.Println("/ found")
+			l.readChar()
+			break
+		case '>':
+			fmt.Println("> found. Make token")
+			l.readChar()
+			break
+		default:
+			if isChar(l.char) {
+				fmt.Printf("char found %c \n", l.char)
+				//NOTE I prefer to not call readchar in the isChar funciton so it's more explicit as to whereI'm call the is readchar function
+				l.readChar()
+				break
+			}
+			fmt.Println("no char found")
+			break
+
 		}
-		fmt.Println("no char found")
-		break
 
 	}
-	token := token.Token{
-		Type: token.LT,
-		Pos:  5}
-	return token
+	return tok
 }
 
 // latest TODO: <div>  make token when you encounter > or </
