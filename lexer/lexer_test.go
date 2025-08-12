@@ -8,7 +8,7 @@ import (
 func TestGetNextToken(t *testing.T) {
 	input := "<article>"
 
-	expectedTokens := [1]token.TokenType{token.OPEN_ARTICLE}
+	expectedTokens := [2]token.TokenType{token.OPEN_ARTICLE, token.EOF}
 
 	l := New(input)
 

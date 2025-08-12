@@ -17,6 +17,7 @@ const (
 	CLOSED_DIV
 	OPEN_ARTICLE
 	CLOSED_ARTICLE
+	EOF
 )
 
 // NOTE I can leave TokenType out of the onst enum expression and implictly cast the int to TokenType

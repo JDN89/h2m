@@ -17,14 +17,14 @@ type Lexer struct {
 
 func New(input string) *Lexer {
 	l := &Lexer{Input: input}
-	//load one char in l.char
-	l.readChar()
 	return l
 }
 
+// BUG: What if we reach the end of the input?
 func (l *Lexer) readChar() {
 	fmt.Printf("inside readchar function %c \n", l.char)
 	if l.currPos >= len(l.Input) {
+		// end of file reached -> set char to 0
 		l.char = 0
 	} else {
 		l.char = l.Input[l.currPos]
@@ -53,20 +53,20 @@ func isChar(char byte) bool {
 
 func (l *Lexer) makeToken() token.Token {
 	ref := l.Input[l.startPos:l.currPos]
-	var o string = string(ref)
-	var ttype = token.HtmlReferenceTokenMap[o]
+	var ttype = token.HtmlReferenceTokenMap[string(ref)]
 	// TODO do I need a pointer?
 	return token.Token{Type: ttype, Pos: l.startPos}
 }
 
 // NOTE I am not making tokens for the content between the tags, because I can assume the start and end based on the html tags start and end positions, plus I don't have to manipulate the content. Only the tags
 
-func (l *Lexer) readReference() {
+func (l *Lexer) readReferenceAndConsume() {
 	for isChar(l.char) {
 		l.readChar()
 	}
 	if l.peek() == '>' {
-		l.readChar()
+		//NOTE consume reference
+		return
 	} else {
 		log.Panic("Expected >")
 	}
@@ -74,9 +74,9 @@ func (l *Lexer) readReference() {
 
 func (l *Lexer) NextToken() token.Token {
 
-	// current doesn't advance so we know the start position (curr) and end position (curr) of a token
-
 	l.startPos = l.currPos
+	//NOTE consume first token and load in to l.char
+	l.readChar()
 
 	// as long start == false keep reading char
 	// check encounter <article>
@@ -89,13 +89,16 @@ func (l *Lexer) NextToken() token.Token {
 	for l.start == false {
 		switch l.char {
 
+		// NOTE consume until you reach <article>
+		//TODO what to do after we parsed </article>
 		case '<':
-			//NOTE consume '<'
 			l.readChar()
-			l.readReference()
+			//NOTE we consume the <Identifier> and make a token
+			l.readReferenceAndConsume()
 			tok = l.makeToken()
 			if tok.Type == token.OPEN_ARTICLE {
 				l.start = true
+				return tok
 			}
 
 		// TODO stop parsing if we reach end of file and never encounter article
@@ -110,15 +113,17 @@ func (l *Lexer) NextToken() token.Token {
 		case '<':
 			fmt.Println("< found")
 			l.readChar()
-			break
 		case '/':
 			fmt.Println("/ found")
 			l.readChar()
-			break
 		case '>':
 			fmt.Println("> found. Make token")
 			l.readChar()
-			break
+
+			//NOTE  EOF we set byte to 0 in readchar 0x00 when we reach the end of the input
+		case 0:
+			tok = token.Token{Type: token.EOF, Pos: l.currPos}
+			return tok
 		default:
 			if isChar(l.char) {
 				fmt.Printf("char found %c \n", l.char)
@@ -127,7 +132,6 @@ func (l *Lexer) NextToken() token.Token {
 				break
 			}
 			fmt.Println("no char found")
-			break
 
 		}
 
