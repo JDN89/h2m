@@ -16,6 +16,9 @@ I know there are (better) tools out there but this is just a hobby project to le
 
 ## NOTES
 
+### 12/08/2025
+Difficulties of deciding where to put the responsabiity of making a token. Should readIdentifer return a token or just advance over the relevatn characters and return? I think it should return a Token. Altough I haven't written it in this way so far.
+
 ### 02/08/2025
 Started writing the lexer. I miss writing with an LSP, but the good thing is that I seem to remember the syntax better, and I see the use of writing short concise names (which I am not doing at the moment). Now that I don't have an LSP, I am dependend on the error messages of the compiler, which shows how important error messages are. I feel like the error messages of the Rust compiler are better, but atm I don't like writing Rust. 
 Learned about writing and running tests in Go, packages, ...

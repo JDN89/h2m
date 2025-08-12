@@ -60,7 +60,8 @@ func (l *Lexer) makeToken() token.Token {
 
 // NOTE I am not making tokens for the content between the tags, because I can assume the start and end based on the html tags start and end positions, plus I don't have to manipulate the content. Only the tags
 
-func (l *Lexer) readReferenceAndConsume() {
+// TODO let readIdentifier() return a token!
+func (l *Lexer) readIdentifier() token.Token {
 	for isChar(l.char) {
 		l.readChar()
 	}
@@ -94,7 +95,7 @@ func (l *Lexer) NextToken() token.Token {
 		case '<':
 			l.readChar()
 			//NOTE we consume the <Identifier> and make a token
-			l.readReferenceAndConsume()
+			l.readIdentifier()
 			tok = l.makeToken()
 			if tok.Type == token.OPEN_ARTICLE {
 				l.start = true
