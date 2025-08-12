@@ -1,0 +1,26 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Output of go build
+/bin/
+/build/
+
+# If you build your binaries in the project root
+yourprogramname
+
+# Debug files (delve debugger, etc)
+*.debug
+
+# Vendor directory if you use vendoring
+/vendor/
+
+# IDE/editor config (optional)
+/.vscode/
+/.idea/
+
+# Temporary files
+*.tmp
