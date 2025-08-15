@@ -3,7 +3,6 @@ package lexer
 import (
 	"fmt"
 	"h2m/token"
-	"log"
 )
 
 // TODO make input private. Now public for debug purposes
@@ -20,11 +19,11 @@ func New(input string) *Lexer {
 	return l
 }
 
-// BUG: What if we reach the end of the input?
+// NOTE readchar should return 0 aka EOF in case we hit the end of the input, so we don't have an out of bounds error
 func (l *Lexer) readChar() {
 	fmt.Printf("inside readchar function %c \n", l.char)
 	if l.currPos >= len(l.Input) {
-		// end of file reached -> set char to 0
+		// end of file reached
 		l.char = 0
 	} else {
 		l.char = l.Input[l.currPos]
@@ -32,7 +31,7 @@ func (l *Lexer) readChar() {
 	l.currPos++
 }
 
-func (l *Lexer) peek() byte {
+func (l *Lexer) peekCurrent() byte {
 	//BUG here
 	// if l.currPos == len(l.Input) {
 	// 	fmt.Printf("At end of input %c can't peek! \n", l.Input[l.currPos])
@@ -51,7 +50,13 @@ func isChar(char byte) bool {
 	return char >= 'a' && char <= 'z' || char >= 'A' && char <= 'Z'
 }
 
-func (l *Lexer) makeToken() token.Token {
+// NOTE: Token should contain a proper errorMessage. But I want to keep my tokens as lightweight as possilbe
+// maybe define multiple errorTypes based on which I can display a proper errorMessage if I have the errortype and the position of the error
+func (l *Lexer) makeErrorToken(errorMessage string) token.Token {
+	return token.Token{Type: token.ERROR_NO_CLOSING_TAG, Pos: l.currPos}
+}
+
+func (l *Lexer) makeHtmlElementToken() token.Token {
 	ref := l.Input[l.startPos:l.currPos]
 	var ttype = token.HtmlReferenceTokenMap[string(ref)]
 	// TODO do I need a pointer?
@@ -60,17 +65,20 @@ func (l *Lexer) makeToken() token.Token {
 
 // NOTE I am not making tokens for the content between the tags, because I can assume the start and end based on the html tags start and end positions, plus I don't have to manipulate the content. Only the tags
 
-// TODO let readIdentifier() return a token!
 func (l *Lexer) readIdentifier() token.Token {
+	tok := token.Token{}
 	for isChar(l.char) {
 		l.readChar()
 	}
-	if l.peek() == '>' {
-		//NOTE consume reference
-		return
-	} else {
-		log.Panic("Expected >")
+
+	if l.peekCurrent() != '>' {
+		return l.makeErrorToken("Expected '>' after identifier")
 	}
+
+	tok = l.makeHtmlElementToken()
+	//consume '>'
+	l.readChar()
+	return tok
 }
 
 func (l *Lexer) NextToken() token.Token {
@@ -95,8 +103,8 @@ func (l *Lexer) NextToken() token.Token {
 		case '<':
 			l.readChar()
 			//NOTE we consume the <Identifier> and make a token
-			l.readIdentifier()
-			tok = l.makeToken()
+			tok = l.readIdentifier()
+			// start lexing content of the blog article
 			if tok.Type == token.OPEN_ARTICLE {
 				l.start = true
 				return tok
