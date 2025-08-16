@@ -19,9 +19,11 @@ func New(input string) *Lexer {
 	return l
 }
 
-// NOTE readchar should return 0 aka EOF in case we hit the end of the input, so we don't have an out of bounds error
+// ReadChar will load the curernt char in l.char and advance currPos to +1
+// TODO probably have to rename currPos
 func (l *Lexer) readChar() {
-	fmt.Printf("inside readchar function %c \n", l.char)
+	// TODO clenaup, leave now for debuggin purposes
+	// fmt.Printf("inside readchar function %c \n", l.char)
 	if l.currPos >= len(l.Input) {
 		// end of file reached
 		l.char = 0
@@ -32,16 +34,12 @@ func (l *Lexer) readChar() {
 }
 
 func (l *Lexer) peekCurrent() byte {
-	//BUG here
-	// if l.currPos == len(l.Input) {
-	// 	fmt.Printf("At end of input %c can't peek! \n", l.Input[l.currPos])
-	// }
 	return l.char
 }
 
 func (l *Lexer) peekNext() byte {
 	if l.currPos == len(l.Input) {
-		fmt.Printf("At end of input %c can't peek! \n", l.Input[l.currPos])
+		fmt.Printf("At end of input can't peek next character in the input stream! \n" )
 	}
 	return l.Input[l.currPos]
 }
@@ -50,8 +48,8 @@ func isChar(char byte) bool {
 	return char >= 'a' && char <= 'z' || char >= 'A' && char <= 'Z'
 }
 
-// NOTE: Token should contain a proper errorMessage. But I want to keep my tokens as lightweight as possilbe
-// maybe define multiple errorTypes based on which I can display a proper errorMessage if I have the errortype and the position of the error
+// NOTE: Token should contain a proper errorMessage. But I want to keep my tokens as lightweight as possilbe.
+// Use different Error tokens, and based on the type of error token and position of  the error I can give a clear error message
 func (l *Lexer) makeErrorToken(errorMessage string) token.Token {
 	return token.Token{Type: token.ERROR_NO_CLOSING_TAG, Pos: l.currPos}
 }
@@ -59,12 +57,11 @@ func (l *Lexer) makeErrorToken(errorMessage string) token.Token {
 func (l *Lexer) makeHtmlElementToken() token.Token {
 	ref := l.Input[l.startPos:l.currPos]
 	var ttype = token.HtmlReferenceTokenMap[string(ref)]
-	// TODO do I need a pointer?
+	// TODO do I need a pointer? Try out at the end of project
 	return token.Token{Type: ttype, Pos: l.startPos}
 }
 
-// NOTE I am not making tokens for the content between the tags, because I can assume the start and end based on the html tags start and end positions, plus I don't have to manipulate the content. Only the tags
-
+// NOTE Only make tokens for the html tags, no content token needed, because no manipulation of content.
 func (l *Lexer) readIdentifier() token.Token {
 	tok := token.Token{}
 	for isChar(l.char) {
@@ -84,7 +81,7 @@ func (l *Lexer) readIdentifier() token.Token {
 func (l *Lexer) NextToken() token.Token {
 
 	l.startPos = l.currPos
-	//NOTE consume first token and load in to l.char
+	// Consume first token and load in to l.char
 	l.readChar()
 
 	// as long start == false keep reading char
@@ -130,13 +127,15 @@ func (l *Lexer) NextToken() token.Token {
 			l.readChar()
 
 			//NOTE  EOF we set byte to 0 in readchar 0x00 when we reach the end of the input
+			// I could also stop lexing at </article>, but I'll just keep reading the leftover tags
 		case 0:
 			tok = token.Token{Type: token.EOF, Pos: l.currPos}
 			return tok
 		default:
 			if isChar(l.char) {
 				fmt.Printf("char found %c \n", l.char)
-				//NOTE I prefer to not call readchar in the isChar funciton so it's more explicit as to whereI'm call the is readchar function
+				//NOTE I prefer to not call readchar in the isChar funciton,
+				// so it's more explicit where we advance and return the next char
 				l.readChar()
 				break
 			}
