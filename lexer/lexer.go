@@ -39,7 +39,7 @@ func (l *Lexer) peekCurrent() byte {
 
 func (l *Lexer) peekNext() byte {
 	if l.currPos == len(l.Input) {
-		fmt.Printf("At end of input can't peek next character in the input stream! \n" )
+		fmt.Printf("At end of input can't peek next character in the input stream! \n")
 	}
 	return l.Input[l.currPos]
 }
@@ -62,7 +62,7 @@ func (l *Lexer) makeHtmlElementToken() token.Token {
 }
 
 // NOTE Only make tokens for the html tags, no content token needed, because no manipulation of content.
-func (l *Lexer) readIdentifier() token.Token {
+func (l *Lexer) readTag() token.Token {
 	tok := token.Token{}
 	for isChar(l.char) {
 		l.readChar()
@@ -99,15 +99,23 @@ func (l *Lexer) NextToken() token.Token {
 		//TODO what to do after we parsed </article>
 		case '<':
 			l.readChar()
-			//NOTE we consume the <Identifier> and make a token
-			tok = l.readIdentifier()
+			//NOTE we consume the <tag> and make a token
+			tok = l.readTag()
 			// start lexing content of the blog article
 			if tok.Type == token.OPEN_ARTICLE {
 				l.start = true
 				return tok
 			}
+			// in case we don't find a closing tag for the html tag
+			if tok.Type == token.ERROR_NO_CLOSING_TAG {
+				return tok
+			}
 
-		// TODO stop parsing if we reach end of file and never encounter article
+		// Stop parsing when we reach EOF
+		case 0:
+			tok = token.Token{Type: token.EOF, Pos: l.currPos}
+			return tok
+
 		default:
 			l.readChar()
 		}
@@ -146,17 +154,3 @@ func (l *Lexer) NextToken() token.Token {
 	}
 	return tok
 }
-
-// latest TODO: <div>  make token when you encounter > or </
-// debug and see why test doesn't print a char
-//look at video of tj to see how to debug go code in neovim
-
-//TODO define tokens
-// Type and position in input stream
-// no need to copy the string, calculate the offset
-// identifier tokens <p> </p>
-//content Token -> part between <p> </p>
-//just track start position  end of contennt is start of enclosing tag
-
-// NOTE: I noticed that the to blogs that I want to convert to markdown the blog content is wrapped in the <article> elmenent. So I'll start lexing once I encounter article. When encounter '<' identify which element it is and store the type and position in a token struct. for the content als just the position is needed. altough why? we just need to replace the html tags and not the content. So I can probably start with just replacing the tags.
-//WHAT with tags that immediatley have a closing tag, tables, hrefs, lists? worries for later

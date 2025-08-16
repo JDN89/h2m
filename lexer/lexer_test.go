@@ -5,7 +5,19 @@ import (
 	"testing"
 )
 
-func Test
+func TestMakeErrorToken(t *testing.T) {
+	input := "<article blog content"
+	expectedTokens := [1]token.TokenType{token.ERROR_NO_CLOSING_TAG}
+	l := New(input)
+
+	for i, expectedType := range expectedTokens {
+		tok := l.NextToken()
+		if tok.Type != expectedType {
+			t.Errorf("tests[%d] - token type wrong. expected=%q, got=%q", i, expectedType, tok.Type)
+		}
+
+	}
+}
 
 func TestGetNextToken(t *testing.T) {
 	input := "<article>"
