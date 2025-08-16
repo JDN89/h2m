@@ -5,6 +5,8 @@ import (
 	"testing"
 )
 
+func Test
+
 func TestGetNextToken(t *testing.T) {
 	input := "<article>"
 
