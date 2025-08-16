@@ -20,9 +20,9 @@ func TestMakeErrorToken(t *testing.T) {
 }
 
 func TestGetNextToken(t *testing.T) {
-	input := "<article>"
+	input := "<article> content </article>"
 
-	expectedTokens := [2]token.TokenType{token.OPEN_ARTICLE, token.EOF}
+	expectedTokens := [3]token.TokenType{token.OPEN_ARTICLE, token.CLOSED_ARTICLE, token.EOF}
 
 	l := New(input)
 
