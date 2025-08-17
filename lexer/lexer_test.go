@@ -30,7 +30,7 @@ func TestGetNextToken(t *testing.T) {
 		tok := l.NextToken()
 
 		if tok.Type != expectedType {
-			t.Errorf("tests[%d] - token type wrong. expected=%q, got=%q", i, expectedType, tok.Type)
+			t.Errorf("tests compare token number[%d] - token type wrong. expected=%d, got=%d", i, expectedType, tok.Type)
 		}
 	}
 }

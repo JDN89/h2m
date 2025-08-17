@@ -11,7 +11,9 @@ type Lexer struct {
 	startPos int
 	currPos  int
 	char     byte
-	start    bool
+	//TODO think of better way to start and stop lexing
+	start bool
+	stop  bool
 }
 
 func New(input string) *Lexer {
@@ -62,7 +64,7 @@ func (l *Lexer) makeHtmlElementToken() token.Token {
 }
 
 // NOTE Only make tokens for the html tags, no content token needed, because no manipulation of content.
-func (l *Lexer) readTag() token.Token {
+func (l *Lexer) consumeTag() token.Token {
 	tok := token.Token{}
 	for isChar(l.char) {
 		l.readChar()
@@ -92,7 +94,12 @@ func (l *Lexer) NextToken() token.Token {
 	// TODO test impact of using pointer once project is finished
 	tok := token.Token{}
 
-	for l.start == false {
+	// Parsed </article>
+	for l.start == false && l.stop == true {
+		l.readChar()
+	}
+
+	for l.start == false && l.stop == false {
 		switch l.char {
 
 		// NOTE consume until you reach <article>
@@ -100,7 +107,7 @@ func (l *Lexer) NextToken() token.Token {
 		case '<':
 			l.readChar()
 			//NOTE we consume the <tag> and make a token
-			tok = l.readTag()
+			tok = l.consumeTag()
 			// start lexing content of the blog article
 			if tok.Type == token.OPEN_ARTICLE {
 				l.start = true
@@ -121,18 +128,23 @@ func (l *Lexer) NextToken() token.Token {
 		}
 
 	}
-	for l.start == true {
+	for l.start == true && l.stop == false {
 		// TODO: implement make tokens for the other element references;
 		switch l.char {
 		case '<':
-			fmt.Println("< found")
 			l.readChar()
-		case '/':
-			fmt.Println("/ found")
-			l.readChar()
-		case '>':
-			fmt.Println("> found. Make token")
-			l.readChar()
+			if l.peekCurrent() == '/' {
+				//BUG set breakpoint here
+				l.readChar()
+				tok := l.consumeTag()
+				if tok.Type == token.CLOSED_ARTICLE {
+					l.stop = true
+					l.start = false
+				}
+				return tok
+			}
+			tok := l.consumeTag()
+			return tok
 
 			//NOTE  EOF we set byte to 0 in readchar 0x00 when we reach the end of the input
 			// I could also stop lexing at </article>, but I'll just keep reading the leftover tags
@@ -140,17 +152,9 @@ func (l *Lexer) NextToken() token.Token {
 			tok = token.Token{Type: token.EOF, Pos: l.currPos}
 			return tok
 		default:
-			if isChar(l.char) {
-				fmt.Printf("char found %c \n", l.char)
-				//NOTE I prefer to not call readchar in the isChar funciton,
-				// so it's more explicit where we advance and return the next char
-				l.readChar()
-				break
-			}
-			fmt.Println("no char found")
-
+			// TODO for now I consume al chars. Should I make a difference between char, whitespace and other symbols?
+			l.readChar()
 		}
-
 	}
 	return tok
 }

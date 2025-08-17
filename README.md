@@ -16,6 +16,7 @@ I know there are (better) tools out there but this is just a hobby project to le
 
 ## NOTES
 
+
 ### 15/08/2025
 I wish I had some more time to code, but with my baby of 4 months it's just not possible. It is interesting tough to code in these small slots of 15 minutes to 1 hour in the evening. The most dangerous thing is getting to excited and staying up to late, which happens a lot :) 
 I am pretty excited about golang so for. I was surprised as how fast you can become semi productive in Go. I am sure my knowledge of C helps a lot.
