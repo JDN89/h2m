@@ -5,10 +5,11 @@ The concept is to input a URL into the CLI tool, which then saves the Markdown f
 I know there are (better) tools out there but this is just a hobby project to learn golang.
 
 ## TODO
-- [ ] install an LSP for markdown. I'm getting randomg error messaged in README.md... (nvim releated)
-- [ ] finish parsing first html element correctly
-- [ ] rename vars in lexer_test.go. atm confusing naming
-
+- [ ] fix bug parsing <article> content </article> -- endless loop
+## DONE
+- [x] install an LSP for markdown. I'm getting randomg error messaged in README.md... (nvim releated)
+- [x] finish parsing first html element correctly
+- [x] rename vars in lexer_test.go. atm confusing naming
 ## Steps
 - Get html content
 - setup lexer

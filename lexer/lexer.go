@@ -80,6 +80,8 @@ func (l *Lexer) consumeTag() token.Token {
 	return tok
 }
 
+// BUG: I have create tokens for the content as well, otherwise when i parse <article> bla bla </article>
+// lexer will return a token for <article> for now just consumes the content and sets l.start
 func (l *Lexer) NextToken() token.Token {
 
 	l.startPos = l.currPos
@@ -105,6 +107,9 @@ func (l *Lexer) NextToken() token.Token {
 		// NOTE consume until you reach <article>
 		//TODO what to do after we parsed </article>
 		case '<':
+			// NOTE: because I don't make a token for content, we consume the content with the token that follows, which means we have to set the l.start when we arrive at '<'
+			// -1 because once char is and set, currPos allready points to the next char to be consumed
+			l.startPos = l.currPos - 1
 			l.readChar()
 			//NOTE we consume the <tag> and make a token
 			tok = l.consumeTag()
@@ -132,6 +137,8 @@ func (l *Lexer) NextToken() token.Token {
 		// TODO: implement make tokens for the other element references;
 		switch l.char {
 		case '<':
+			// -1 because once char is and set, currPos allready points to the next char to be consumed
+			l.startPos = l.currPos - 1
 			l.readChar()
 			if l.peekCurrent() == '/' {
 				//BUG set breakpoint here

@@ -19,6 +19,7 @@ const (
 	CLOSED_ARTICLE
 	EOF
 	ERROR_NO_CLOSING_TAG
+	CONTENT
 )
 
 // NOTE I can leave TokenType out of the onst enum expression and implictly cast the int to TokenType
