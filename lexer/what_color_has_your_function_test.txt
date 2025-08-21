@@ -1,18 +1,18 @@
 
 // input := "
 // <article>
-// <header>
-// <h1>
-//   <a href="/2015/02/01/what-color-is-your-function/" rel="bookmark" title="Permanent Link to What Color is Your Function?">
-//     What Color is Your Function?
-//   </a>
-// </h1>
-//   <a class="older" href="/2014/12/21/rooms-and-mazes/" title="Older Post “Rooms and Mazes: A Procedural Dungeon Generator”">←</a>
-//   <a class="newer" href="/2015/09/07/what-the-hero-sees/" title="Newer Post “What the Hero Sees: Field-of-View for Roguelikes”">→</a>
-// </header>
-// <h4><a href="/archive">February 01, 2015</a>
-//     <span class="tags"><a href="/category/code">code</a> <a href="/category/dart">dart</a> <a href="/category/go">go</a> <a href="/category/javascript">javascript</a> <a href="/category/language">language</a> <a href="/category/lua">lua</a></span>
-// </h4>
+ <header>
+ <h1>
+   <a href="/2015/02/01/what-color-is-your-function/" rel="bookmark" title="Permanent Link to What Color is Your Function?">
+     What Color is Your Function?
+   </a>
+ </h1>
+   <a class="older" href="/2014/12/21/rooms-and-mazes/" title="Older Post “Rooms and Mazes: A Procedural Dungeon Generator”">←</a>
+   <a class="newer" href="/2015/09/07/what-the-hero-sees/" title="Newer Post “What the Hero Sees: Field-of-View for Roguelikes”">→</a>
+ </header>
+ <h4><a href="/archive">February 01, 2015</a>
+     <span class="tags"><a href="/category/code">code</a> <a href="/category/dart">dart</a> <a href="/category/go">go</a> <a href="/category/javascript">javascript</a> <a href="/category/language">language</a> <a href="/category/lua">lua</a></span>
+ </h4>
 // <p>I don’t know about you, but nothing gets me going in the morning quite like a
 // good old fashioned programming language rant. It stirs the blood to see someone
 // skewer one of those <a href="http://www.paulgraham.com/avg.html">“blub”</a> languages the plebians use, muddling through

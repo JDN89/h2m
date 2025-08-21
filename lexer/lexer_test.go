@@ -20,7 +20,7 @@ func TestMakeErrorToken(t *testing.T) {
 }
 
 func TestGetNextToken(t *testing.T) {
-	input := "<article> content </article>"
+	input := `<article><header> content </header> </article>`
 
 	expectedTokens := [3]token.TokenType{token.OPEN_ARTICLE, token.CLOSED_ARTICLE, token.EOF}
 
@@ -35,3 +35,18 @@ func TestGetNextToken(t *testing.T) {
 		}
 	}
 }
+
+// func TestParseHeaderOfWhatColorIsYourFunction(t *testing.T) {
+//
+// 	input := ` <header>
+//  <h1>
+//    <a href="/2015/02/01/what-color-is-your-function/" rel="bookmark" title="Permanent Link to What Color is Your Function?">
+//      What Color is Your Function?
+//    </a>
+//  </h1>
+//    <a class="older" href="/2014/12/21/rooms-and-mazes/" title="Older Post “Rooms and Mazes: A Procedural Dungeon Generator”">←</a>
+//    <a class="newer" href="/2015/09/07/what-the-hero-sees/" title="Newer Post “What the Hero Sees: Field-of-View for Roguelikes”">→</a>
+//  </header>
+// `
+//
+// }
