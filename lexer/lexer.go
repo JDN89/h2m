@@ -52,7 +52,7 @@ func isChar(char byte) bool {
 
 // NOTE: Token should contain a proper errorMessage. But I want to keep my tokens as lightweight as possilbe.
 // Use different Error tokens, and based on the type of error token and position of  the error I can give a clear error message
-func (l *Lexer) makeErrorToken(errorMessage string) token.Token {
+func (l *Lexer) makeErrorToken() token.Token {
 	return token.Token{Type: token.ERROR_NO_CLOSING_TAG, Pos: l.currPos}
 }
 
@@ -71,7 +71,7 @@ func (l *Lexer) consumeTag() token.Token {
 	}
 
 	if l.peekCurrent() != '>' {
-		return l.makeErrorToken("Expected '>' after identifier")
+		return l.makeErrorToken()
 	}
 
 	tok = l.makeHtmlElementToken()
@@ -84,6 +84,13 @@ func (l *Lexer) consumeTag() token.Token {
 // lexer will return a token for <article> for now just consumes the content and sets l.start
 func (l *Lexer) NextToken() token.Token {
 
+	tok := token.Token{}
+
+	if l.currPos >= len(l.Input) {
+		tok = token.Token{Type: token.EOF, Pos: l.currPos}
+		return tok
+	}
+
 	l.startPos = l.currPos
 	// Consume first token and load in to l.char
 	l.readChar()
@@ -94,7 +101,6 @@ func (l *Lexer) NextToken() token.Token {
 
 	// NOTE no pointer because the struct is very small.
 	// TODO test impact of using pointer once project is finished
-	tok := token.Token{}
 
 	// Parsed </article>
 	for l.start == false && l.stop == true {
@@ -123,7 +129,7 @@ func (l *Lexer) NextToken() token.Token {
 				return tok
 			}
 
-		// Stop parsing when we reach EOF
+		// Stop parsing when we reach EOF, in that case we set char in readchar to 0 and hit this case
 		case 0:
 			tok = token.Token{Type: token.EOF, Pos: l.currPos}
 			return tok
@@ -134,10 +140,9 @@ func (l *Lexer) NextToken() token.Token {
 
 	}
 	for l.start == true && l.stop == false {
-		// TODO: implement make tokens for the other element references;
 		switch l.char {
 		case '<':
-			// -1 because once char is and set, currPos allready points to the next char to be consumed
+			// -1 because l.currPos allreay points to the next char in the input
 			l.startPos = l.currPos - 1
 			l.readChar()
 			if l.peekCurrent() == '/' {
