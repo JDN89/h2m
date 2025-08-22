@@ -27,7 +27,7 @@ Just found out that in go String are immutable, meaning that if want to replace 
 
 Scratch that -> byte buffers are mutable, so I can, instead of mutating the bye[] to string just pass the byte buffer to lexer and work and that and then pass it to the parser and start mutating the byte buffer in de markdown gen by working from back to front! yay
 
-Why front to back, because in that case i don't have to recalculate the token positions in the text based on the allready replaced text. Write this out clearer, but. ```<h1> some title </h1> ``` would be start token.H1 token.pos = 0 token.end 4 -> after replacing the html i'd get # some title /</h1> /BUT the start and end position of /</h1>/ now have moved up with 3 positions in the text. This would not happen when I manupulate the input in revere.
+Why front to back, because in that case i don't have to recalculate the token positions in the text based on the allready replaced text. Write this out clearer, but. ```<h1> some title </h1> ``` would be start token.H1 token.pos = 0 token.end 4 -> after replacing the html i'd get # some title ```</h1>``` BUT the start and end position of ```</h1>``` now have moved up with 3 positions in the text. This would not happen when I manupulate the input in revere.
 
 Parellel processing token stream? What if lex and store the stream in memomry before passing it to the markdown generator? In that case I can split upt the token stream in equal parts -> pass the to named go channels to process parallell and then join the input from the channels in logical order. Would this make my h2m converter faster??? experiment with this in the end
 
