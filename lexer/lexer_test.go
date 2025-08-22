@@ -22,7 +22,7 @@ func TestMakeErrorToken(t *testing.T) {
 func TestGetNextToken(t *testing.T) {
 	input := `<article><header> content </header> </article>`
 
-	expectedTokens := [3]token.TokenType{token.OPEN_ARTICLE, token.CLOSED_ARTICLE, token.EOF}
+	expectedTokens := [5]token.TokenType{token.OPEN_ARTICLE, token.OPEN_HEADER, token.CLOSED_HEADER, token.CLOSED_ARTICLE, token.EOF}
 
 	l := New(input)
 
@@ -31,7 +31,7 @@ func TestGetNextToken(t *testing.T) {
 		tok := l.NextToken()
 
 		if tok.Type != expectedType {
-			t.Errorf("tests compare token number[%d] - token type wrong. expected=%d, got=%d", i, expectedType, tok.Type)
+			t.Errorf("tests compare token number[%d] - token type wrong. expected %s, got=%s", i, token.TokenType.ToString(expectedType), token.TokenType.ToString(tok.Type))
 		}
 	}
 }

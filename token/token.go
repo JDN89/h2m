@@ -17,6 +17,8 @@ const (
 	CLOSED_DIV
 	OPEN_ARTICLE
 	CLOSED_ARTICLE
+	OPEN_HEADER
+	CLOSED_HEADER
 	EOF
 	ERROR_NO_CLOSING_TAG
 	CONTENT
@@ -26,4 +28,22 @@ const (
 var HtmlReferenceTokenMap = map[string]TokenType{
 	"<article>":  OPEN_ARTICLE,
 	"</article>": CLOSED_ARTICLE,
+	"<header>":   OPEN_HEADER,
+	"</header>":  CLOSED_HEADER,
+}
+
+var tokenTypeToString = map[TokenType]string{
+	OPEN_ARTICLE:   "<article>",
+	CLOSED_ARTICLE: "</article>",
+	OPEN_HEADER:    "<header>",
+	CLOSED_HEADER:  "</header>",
+}
+
+func (t TokenType) ToString() string {
+
+	if val, ok := tokenTypeToString[t]; ok {
+
+		return val
+	}
+	return "UNKOWN"
 }

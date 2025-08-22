@@ -5,6 +5,8 @@ The concept is to input a URL into the CLI tool, which then saves the Markdown f
 I know there are (better) tools out there but this is just a hobby project to learn golang.
 
 ## TODO
+- [ ] fix bug lexing:`<article><header> content </header> </article>`
+
 - [ ] create todos based on my comment of 21/08/2025
 - [ ] If I want to be able to get rid of the bloat inside html tags. I must store the beginning of the tag but also of the content. Or mayby I don't need to store the conent, and storing the start and endo of the tags is just enough, and I just replace the complete tag with the equivalent markdown content.
 - [ ] after parsing the header start generating markdown based on the token stream
@@ -61,6 +63,7 @@ Learned about writing and running tests in Go, packages, ...
 
 [mutable-strings-in-golang](https://medium.com/kokster/mutable-strings-in-golang-298d422d01bc) \
 [strings-in-golang](https://www.geeksforgeeks.org/go-language/strings-in-golang/) \
+[stack-overflow-how-to-check-value-in-map-go](https://stackoverflow.com/questions/2050391/how-to-check-if-a-map-contains-a-key-in-go)
 
 Type definitions (not type aliases) zijn heel krachtig. Kan je bijvoorbeeld van een int een type maken specifiek voor je domein. Je type erft geen methods van het bovenliggen type en je kan je eigen methodes voor dat type specifieren. Verder kan je niet impliciet van int naar je type converten. Je moet __expliciet casten__. Verder type system info opzoeken en mee experimenteren. Waarschijnlijk ook meer lightweight dan maken van een class in Java. Per file kan je meerdere types definieren.
 
