@@ -18,6 +18,8 @@ type Lexer struct {
 
 func New(input string) *Lexer {
 	l := &Lexer{Input: input}
+	// load first char into the lexer. I was first doing this at the beginning of NextToken, but this breaks when we start parsing the second token, because < is allready loaded into the lexer
+	l.readChar()
 	return l
 }
 
@@ -92,8 +94,6 @@ func (l *Lexer) NextToken() token.Token {
 	}
 
 	l.startPos = l.currPos
-	// Consume first token and load in to l.char
-	l.readChar()
 
 	// as long start == false keep reading char
 	// check encounter <article>
