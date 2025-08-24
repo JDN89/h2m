@@ -20,9 +20,13 @@ func TestMakeErrorToken(t *testing.T) {
 }
 
 func TestGetNextToken(t *testing.T) {
-	input := `<article><header> content </header> </article>`
+	input := `<article><header>
+	<h1>
+	content
+	</h1>
+	</header> </article>`
 
-	expectedTokens := [5]token.TokenType{token.OPEN_ARTICLE, token.OPEN_HEADER, token.CLOSED_HEADER, token.CLOSED_ARTICLE, token.EOF}
+	expectedTokens := [7]token.TokenType{token.OPEN_ARTICLE, token.OPEN_HEADER, token.OPEN_HEADING_1, token.CLOSED_HEADING_1, token.CLOSED_HEADER, token.CLOSED_ARTICLE, token.EOF}
 
 	l := New(input)
 

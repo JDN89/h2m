@@ -17,6 +17,8 @@ const (
 	CLOSED_DIV
 	OPEN_ARTICLE
 	CLOSED_ARTICLE
+	OPEN_HEADING_1
+	CLOSED_HEADING_1
 	OPEN_HEADER
 	CLOSED_HEADER
 	EOF
@@ -30,13 +32,17 @@ var HtmlReferenceTokenMap = map[string]TokenType{
 	"</article>": CLOSED_ARTICLE,
 	"<header>":   OPEN_HEADER,
 	"</header>":  CLOSED_HEADER,
+	"<h1>":       OPEN_HEADING_1,
+	"</h1>":      CLOSED_HEADING_1,
 }
 
 var tokenTypeToString = map[TokenType]string{
-	OPEN_ARTICLE:   "<article>",
-	CLOSED_ARTICLE: "</article>",
-	OPEN_HEADER:    "<header>",
-	CLOSED_HEADER:  "</header>",
+	OPEN_ARTICLE:     "<article>",
+	CLOSED_ARTICLE:   "</article>",
+	OPEN_HEADER:      "<header>",
+	CLOSED_HEADER:    "</header>",
+	OPEN_HEADING_1:   "<h1>",
+	CLOSED_HEADING_1: "</h1>",
 }
 
 func (t TokenType) ToString() string {

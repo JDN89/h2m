@@ -41,6 +41,16 @@ func (l *Lexer) peekCurrent() byte {
 	return l.char
 }
 
+func (l *Lexer) consumeWhiteSpaceLineBreaks() {
+	for {
+		ch := l.peekCurrent()
+		if ch != ' ' && ch != '\n' && ch != '\r' {
+			break
+		}
+		l.readChar()
+	}
+}
+
 func (l *Lexer) peekNext() byte {
 	if l.currPos == len(l.Input) {
 		fmt.Printf("At end of input can't peek next character in the input stream! \n")
@@ -68,6 +78,9 @@ func (l *Lexer) makeHtmlElementToken() token.Token {
 // NOTE Only make tokens for the html tags, no content token needed, because no manipulation of content.
 func (l *Lexer) consumeTag() token.Token {
 	tok := token.Token{}
+
+	l.consumeWhiteSpaceLineBreaks()
+
 	for isChar(l.char) {
 		l.readChar()
 	}
