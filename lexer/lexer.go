@@ -44,7 +44,7 @@ func (l *Lexer) peekCurrent() byte {
 func (l *Lexer) consumeWhiteSpaceLineBreaks() {
 	for {
 		ch := l.peekCurrent()
-		if ch != ' ' && ch != '\n' && ch != '\r' {
+		if ch != ' ' && ch != '\n' && ch != '\r' && ch != '\b' && ch != '\t' {
 			break
 		}
 		l.readChar()
@@ -60,6 +60,10 @@ func (l *Lexer) peekNext() byte {
 
 func isChar(char byte) bool {
 	return char >= 'a' && char <= 'z' || char >= 'A' && char <= 'Z'
+}
+func isCharOrNumber(char byte) bool {
+
+	return char >= 'a' && char <= 'z' || char >= 'A' && char <= 'Z' || char >= '0' && char <= '9'
 }
 
 // NOTE: Token should contain a proper errorMessage. But I want to keep my tokens as lightweight as possilbe.
@@ -81,7 +85,7 @@ func (l *Lexer) consumeTag() token.Token {
 
 	l.consumeWhiteSpaceLineBreaks()
 
-	for isChar(l.char) {
+	for isCharOrNumber(l.char) {
 		l.readChar()
 	}
 

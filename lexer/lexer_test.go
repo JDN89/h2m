@@ -20,7 +20,7 @@ func TestMakeErrorToken(t *testing.T) {
 }
 
 func TestGetNextToken(t *testing.T) {
-	input := `<article><header>
+	input := `<article> 		<header>
 	<h1>
 	content
 	</h1>
