@@ -10,6 +10,7 @@ I know there are (better) tools out there but this is just a hobby project to le
 - [ ] create todos based on my comment of 21/08/2025
 - [ ] If I want to be able to get rid of the bloat inside html tags. I must store the beginning of the tag but also of the content. Or mayby I don't need to store the conent, and storing the start and endo of the tags is just enough, and I just replace the complete tag with the equivalent markdown content.
 - [ ] after parsing the header start generating markdown based on the token stream
+- [ ] checkout Go release 1.25 and the note about [faster slices](https://go.dev/doc/go1.25#faster-slices), [other article](https://bitstack.substack.com/p/go-125-compiler-update-stronger-alignment),[dreams of code video](https://www.youtube.com/watch?v=8fcjcoXXMVQ)
 ## DONE
 - [x] fix bug parsing <article> content </article> -- endless loop
 - [x] install an LSP for markdown. I'm getting randomg error messaged in README.md... (nvim releated)
