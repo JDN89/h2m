@@ -26,7 +26,7 @@ I know there are (better) tools out there but this is just a hobby project to le
 ### 31/08/2025
 Issue with what color has your function article. The H1 has an `<a href ...>` wrapped inside of it and the href wraps the the header title. My first idea was, once you parse a tag, to ingnore all the inner tags, but this won't work for obvious reasons. But I can do this for h1 that I skip all the inner tags and just get the content out. I don't see a scenario where I need something besides the h1 title inside the h1 header.
 I just realised this is a bad idea. I was going consume the href nested in the `<h1>` header, but this adds all sorts of complexity to my lexer. Like instead of just lexing the <a href.. > and returing an anchor tag token, I was goign to build an exception that just consumes the chars inside het `<h1>` tags until I hit a '>' of the anchor tag element. SO WHAT if my lexer consumes and produces an anchor tag token!!?? My lexer shouldn't care and just spit out tokens wether or not the position of the tokens is convenient or not. It's up to the markdown Generator to decide wheter a token should be discarded or not, based on the position in the token stream.
-Learned. Don't add unecessary complexity, just lex and spit out tokens. Then decide in the next steps what to do with the generated tokens.
+Learned. Don't add unecessary complexity, just lex and spit out tokens -- keep your lexer __dumb__. Then decide in the next steps what to do with the generated tokens.
 
 This does mean that I must start spitting out content tokens, because otherwise I'd don't know where the content is situated in nested tags!
 ```html
