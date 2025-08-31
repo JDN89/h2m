@@ -185,15 +185,16 @@ func (l *Lexer) NextToken() token.Token {
 				return tok
 			}
 			tok := l.consumeTag()
-			if tok.Type == token.OPEN_HEADING_1 {
-
-				for l.char != '>' {
-					l.readChar()
-				}
-
-				tok := l.makeContentToken()
-				return tok
-			}
+			// BUG: see coment 31/08/2025
+			// if tok.Type == token.OPEN_HEADING_1 {
+			//
+			// 	for l.char != '>' {
+			// 		l.readChar()
+			// 	}
+			//
+			// 	tok := l.makeContentToken()
+			// 	return tok
+			// }
 			return tok
 
 			// NOTE:  EOF we set byte to 0 in readchar 0x00 when we reach the end of the input
