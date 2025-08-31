@@ -69,17 +69,26 @@ func isCharOrNumber(char byte) bool {
 // NOTE: Token should contain a proper errorMessage. But I want to keep my tokens as lightweight as possilbe.
 // Use different Error tokens, and based on the type of error token and position of  the error I can give a clear error message
 func (l *Lexer) makeErrorToken() token.Token {
-	return token.Token{Type: token.ERROR_NO_CLOSING_TAG, Pos: l.currPos}
+	return token.Token{Type: token.ERROR_NO_CLOSING_TAG, StartPos: l.currPos}
 }
 
 func (l *Lexer) makeHtmlElementToken() token.Token {
 	ref := l.Input[l.startPos:l.currPos]
 	var ttype = token.HtmlReferenceTokenMap[string(ref)]
 	// TODO do I need a pointer? Try out at the end of project
-	return token.Token{Type: ttype, Pos: l.startPos}
+	return token.Token{Type: ttype, StartPos: l.startPos}
 }
 
-// NOTE Only make tokens for the html tags, no content token needed, because no manipulation of content.
+func (l *Lexer) makeContentToken() token.Token {
+	start := l.currPos
+	for l.char != '>' {
+		l.readChar()
+	}
+	end := l.currPos - 1
+	return token.Token{Type: token.CONTENT, StartPos: start, EndPos: end}
+}
+
+// NOTE: Only make tokens for the html tags, no content token needed, because no manipulation of content.
 func (l *Lexer) consumeTag() token.Token {
 	tok := token.Token{}
 
@@ -106,7 +115,7 @@ func (l *Lexer) NextToken() token.Token {
 	tok := token.Token{}
 
 	if l.currPos >= len(l.Input) {
-		tok = token.Token{Type: token.EOF, Pos: l.currPos}
+		tok = token.Token{Type: token.EOF, StartPos: l.currPos}
 		return tok
 	}
 
@@ -116,25 +125,27 @@ func (l *Lexer) NextToken() token.Token {
 	// check encounter <article>
 	// set start == true
 
-	// NOTE no pointer because the struct is very small.
-	// TODO test impact of using pointer once project is finished
+	// NOTE: no pointer because the struct is very small.
+	// TODO: test impact of using pointer once project is finished
 
 	// Parsed </article>
 	for l.start == false && l.stop == true {
 		l.readChar()
 	}
 
+	// NOTE: Loop that keeps consuming chars, until TOKEN_ARTICLE is encountered
+	// TODO clenaup, all this stuf can probably set in the same for loop?
 	for l.start == false && l.stop == false {
 		switch l.char {
 
-		// NOTE consume until you reach <article>
+		// NOTE: consume until you reach <article>
 		//TODO what to do after we parsed </article>
 		case '<':
 			// NOTE: because I don't make a token for content, we consume the content with the token that follows, which means we have to set the l.start when we arrive at '<'
 			// -1 because once char is and set, currPos allready points to the next char to be consumed
 			l.startPos = l.currPos - 1
 			l.readChar()
-			//NOTE we consume the <tag> and make a token
+			//NOTE: we consume the <tag> and make a token
 			tok = l.consumeTag()
 			// start lexing content of the blog article
 			if tok.Type == token.OPEN_ARTICLE {
@@ -148,7 +159,7 @@ func (l *Lexer) NextToken() token.Token {
 
 		// Stop parsing when we reach EOF, in that case we set char in readchar to 0 and hit this case
 		case 0:
-			tok = token.Token{Type: token.EOF, Pos: l.currPos}
+			tok = token.Token{Type: token.EOF, StartPos: l.currPos}
 			return tok
 
 		default:
@@ -156,6 +167,7 @@ func (l *Lexer) NextToken() token.Token {
 		}
 
 	}
+	// NOTE: Loop that consumes html tags between the <article> </article> tags
 	for l.start == true && l.stop == false {
 		switch l.char {
 		case '<':
@@ -173,12 +185,21 @@ func (l *Lexer) NextToken() token.Token {
 				return tok
 			}
 			tok := l.consumeTag()
+			if tok.Type == token.OPEN_HEADING_1 {
+
+				for l.char != '>' {
+					l.readChar()
+				}
+
+				tok := l.makeContentToken()
+				return tok
+			}
 			return tok
 
-			//NOTE  EOF we set byte to 0 in readchar 0x00 when we reach the end of the input
+			// NOTE:  EOF we set byte to 0 in readchar 0x00 when we reach the end of the input
 			// I could also stop lexing at </article>, but I'll just keep reading the leftover tags
 		case 0:
-			tok = token.Token{Type: token.EOF, Pos: l.currPos}
+			tok = token.Token{Type: token.EOF, StartPos: l.currPos}
 			return tok
 		default:
 			// TODO for now I consume al chars. Should I make a difference between char, whitespace and other symbols?

@@ -22,11 +22,13 @@ func TestMakeErrorToken(t *testing.T) {
 func TestGetNextToken(t *testing.T) {
 	input := `<article> 		<header>
 	<h1>
-	content
+   <a href="/2015/02/01/what-color-is-your-function/" rel="bookmark" title="Permanent Link to What Color is Your Function?">
+     What Color is Your Function?
+   </a>
 	</h1>
 	</header> </article>`
 
-	expectedTokens := [7]token.TokenType{token.OPEN_ARTICLE, token.OPEN_HEADER, token.OPEN_HEADING_1, token.CLOSED_HEADING_1, token.CLOSED_HEADER, token.CLOSED_ARTICLE, token.EOF}
+	expectedTokens := [8]token.TokenType{token.OPEN_ARTICLE, token.OPEN_HEADER, token.OPEN_HEADING_1, token.CONTENT, token.CLOSED_HEADING_1, token.CLOSED_HEADER, token.CLOSED_ARTICLE, token.EOF}
 
 	l := New(input)
 

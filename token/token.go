@@ -4,8 +4,9 @@ package token
 type TokenType int
 
 type Token struct {
-	Type TokenType
-	Pos  int
+	Type     TokenType
+	StartPos int
+	EndPos   int
 }
 
 const (
