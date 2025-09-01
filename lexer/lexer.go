@@ -92,14 +92,8 @@ func (l *Lexer) makeContentToken() token.Token {
 func (l *Lexer) consumeTag() token.Token {
 	tok := token.Token{}
 
-	l.consumeWhiteSpaceLineBreaks()
-
-	for isCharOrNumber(l.char) {
+	for l.char != '>' {
 		l.readChar()
-	}
-
-	if l.peekCurrent() != '>' {
-		return l.makeErrorToken()
 	}
 
 	tok = l.makeHtmlElementToken()
@@ -183,6 +177,10 @@ func (l *Lexer) NextToken() token.Token {
 					l.start = false
 				}
 				return tok
+			}
+			// NOTE: <a href= "">
+			if l.peekCurrent() == 'a' {
+
 			}
 			tok := l.consumeTag()
 			// BUG: see coment 31/08/2025
