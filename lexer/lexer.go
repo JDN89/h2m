@@ -128,12 +128,12 @@ func (l *Lexer) NextToken() token.Token {
 	}
 
 	// NOTE: Loop that keeps consuming chars, until TOKEN_ARTICLE is encountered
-	// TODO clenaup, all this stuf can probably set in the same for loop?
+	// TODO: clenaup, all this stuf can probably set in the same for loop?
 	for l.start == false && l.stop == false {
 		switch l.char {
 
 		// NOTE: consume until you reach <article>
-		//TODO what to do after we parsed </article>
+		//TODO: what to do after we parsed </article>
 		case '<':
 			// NOTE: because I don't make a token for content, we consume the content with the token that follows, which means we have to set the l.start when we arrive at '<'
 			// -1 because once char is and set, currPos allready points to the next char to be consumed
@@ -156,6 +156,7 @@ func (l *Lexer) NextToken() token.Token {
 			tok = token.Token{Type: token.EOF, StartPos: l.currPos}
 			return tok
 
+			// BUG: default option should be create content token. I want to keep track of the plain text or content that is between tags and should be left untouched by the markdown transpiler
 		default:
 			l.readChar()
 		}
