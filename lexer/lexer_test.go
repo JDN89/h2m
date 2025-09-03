@@ -20,6 +20,26 @@ import (
 // 	}
 // }
 
+func TestLexerTokens(t *testing.T) {
+	input := ` <article> content</article>
+	`
+
+	expected := []token.Token{
+		{Type: token.OPEN_ARTICLE, StartPos: 1, EndPos: 10},
+		{Type: token.CONTENT, StartPos: 12, EndPos: 18},
+		{Type: token.CLOSED_ARTICLE, StartPos: 19, EndPos: 30},
+	}
+
+	l := New(input)
+
+	for i, exp := range expected {
+		tok := l.NextToken()
+		if tok != exp {
+			t.Errorf("token[%d] mismatch: expected %+v, got %+v \n", i, exp, tok)
+		}
+	}
+}
+
 // NOTE: This test still works. the issue is recognizing anchors and content?
 func TestRegression(t *testing.T) {
 	input := `<article> 		<header>
@@ -28,7 +48,7 @@ func TestRegression(t *testing.T) {
 	</h1>
 	</header> </article>`
 
-	expectedTokens := [7]token.TokenType{token.OPEN_ARTICLE, token.OPEN_HEADER, token.OPEN_HEADING_1, token.CLOSED_HEADING_1, token.CLOSED_HEADER, token.CLOSED_ARTICLE, token.EOF}
+	expectedTokens := [8]token.TokenType{token.OPEN_ARTICLE, token.OPEN_HEADER, token.OPEN_HEADING_1, token.CONTENT, token.CLOSED_HEADING_1, token.CLOSED_HEADER, token.CLOSED_ARTICLE, token.EOF}
 
 	l := New(input)
 

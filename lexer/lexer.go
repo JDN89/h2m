@@ -76,12 +76,12 @@ func (l *Lexer) makeHtmlElementToken() token.Token {
 	ref := l.Input[l.startPos:l.currPos]
 	var ttype = token.HtmlReferenceTokenMap[string(ref)]
 	// TODO do I need a pointer? Try out at the end of project
-	return token.Token{Type: ttype, StartPos: l.startPos}
+	return token.Token{Type: ttype, StartPos: l.startPos, EndPos: l.currPos - 1}
 }
 
 func (l *Lexer) makeContentToken() token.Token {
 	start := l.currPos
-	for l.char != '>' {
+	for l.char != '<' {
 		l.readChar()
 	}
 	end := l.currPos - 1
@@ -114,6 +114,11 @@ func (l *Lexer) NextToken() token.Token {
 	}
 
 	l.startPos = l.currPos
+
+	// See log 03/09/2025. whitespace, tabs,newlines, ... are not considered as content.
+	// Otherwise for 2 tags seperated by a newline the lexer will consider the newline as content
+	// up to the markdown converter to add tabs, enters,... where necessary
+	l.consumeWhiteSpaceLineBreaks()
 
 	// as long start == false keep reading char
 	// check encounter <article>
@@ -202,8 +207,9 @@ func (l *Lexer) NextToken() token.Token {
 			tok = token.Token{Type: token.EOF, StartPos: l.currPos}
 			return tok
 		default:
-			// TODO for now I consume al chars. Should I make a difference between char, whitespace and other symbols?
-			l.readChar()
+			tok := l.makeContentToken()
+			return tok
+
 		}
 	}
 	return tok

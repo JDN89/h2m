@@ -6,8 +6,8 @@ I know there are (better) tools out there but this is just a hobby project to le
 
 ## TODO
 
+- [ ] fix makeContentTokenTest
 - [ ] fix anchor tag token not recognized
-- [ ] default option in lexer should not be readChar(), but should be makeContentToken(). This is text that can be left as is by the transpiler. The exception is the text that follows the a href tag, because that is the link, name? but this can be easilty handled by the transpiler, but checking the nextToken(). Based on the token sequence create `[title](link)`
 - [ ] Get the content out of the h1 tag
 - [ ] create todos based on my comment of 21/08/2025
 - [ ] If I want to be able to get rid of the bloat inside html tags. I must store the beginning of the tag but also of the content. Or mayby I don't need to store the conent, and storing the start and endo of the tags is just enough, and I just replace the complete tag with the equivalent markdown content.
@@ -16,6 +16,7 @@ I know there are (better) tools out there but this is just a hobby project to le
 
 ## DONE
 
+- [x] default option in lexer should not be readChar(), but should be makeContentToken().
 - [x] fix bug lexing:`<article><header> content </header> </article>`
 - [x] fix bug parsing `<article>` content `</article>` -- endless loop
 - [x] install an LSP for markdown. I'm getting randomg error messaged in README.md... (nvim releated)
@@ -29,6 +30,15 @@ I know there are (better) tools out there but this is just a hobby project to le
 - define html tags to scan (tokens)
 
 ## NOTES
+
+### 03/09/2025
+
+I was going to make the default case in my lexer, makeContentToken and consider everyting
+between tags as content. What with tabs, whitespace, enter,...
+often tags are seperated by whitespace.
+So consume as long as we don't encounter a char or a number? I don't think so
+because you can have sentences that start with special characters.
+Alternative, consume whitespace, tabs, newlines,... until we encounter something.
 
 ### 02/09/2025
 
