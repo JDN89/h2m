@@ -1,8 +1,7 @@
 # h2m
 
-A tool that converts HTML (primarily from blogs) into Markdown.
-The concept is to input a URL into the CLI tool, which then saves the Markdown file to the ~/Documents folder.
-I know there are (better) tools out there but this is just a hobby project to learn golang.
+Hobby project to learn golang. The goals is convert the blog `What color is your function` from html to markdown.
+Maybe I'll generalize it, so it works with all sorts of blogs.
 
 ## TODO
 
