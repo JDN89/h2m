@@ -25,9 +25,10 @@ func TestLexerTokens(t *testing.T) {
 	`
 
 	expected := []token.Token{
-		{Type: token.OPEN_ARTICLE, StartPos: 1, EndPos: 10},
-		{Type: token.CONTENT, StartPos: 12, EndPos: 18},
-		{Type: token.CLOSED_ARTICLE, StartPos: 19, EndPos: 30},
+		{Type: token.OPEN_ARTICLE, StartPos: 1, EndPos: 9},
+		//start is 11
+		{Type: token.CONTENT, StartPos: 11, EndPos: 17},
+		{Type: token.CLOSED_ARTICLE, StartPos: 18, EndPos: 27},
 	}
 
 	l := New(input)
