@@ -26,7 +26,7 @@ func TestLexerTokens(t *testing.T) {
 
 	expected := []token.Token{
 		{Type: token.OPEN_ARTICLE, StartPos: 1, EndPos: 9},
-		//start is 11
+		// BUG: er is nog iets mis met content token. start is volgens test 10, maar dat is white space en end is 18 wat de < is
 		{Type: token.CONTENT, StartPos: 11, EndPos: 17},
 		{Type: token.CLOSED_ARTICLE, StartPos: 18, EndPos: 27},
 	}

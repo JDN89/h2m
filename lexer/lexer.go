@@ -91,6 +91,7 @@ func (l *Lexer) makeContentToken() token.Token {
 
 // NOTE: Only make tokens for the html tags, no content token needed, because no manipulation of content.
 func (l *Lexer) consumeTag() token.Token {
+	// BUG: runt test, the '>' doensnt' get consumed and is still in
 	tok := token.Token{}
 
 	for l.peekNext() != '>' {
