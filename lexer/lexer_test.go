@@ -26,7 +26,6 @@ func TestLexerTokens(t *testing.T) {
 
 	expected := []token.Token{
 		{Type: token.OPEN_ARTICLE, StartPos: 1, EndPos: 9},
-		// BUG: er is nog iets mis met content token. start is volgens test 10, maar dat is white space en end is 18 wat de < is
 		{Type: token.CONTENT, StartPos: 11, EndPos: 17},
 		{Type: token.CLOSED_ARTICLE, StartPos: 18, EndPos: 27},
 	}
@@ -41,26 +40,27 @@ func TestLexerTokens(t *testing.T) {
 	}
 }
 
-// func TestRegression(t *testing.T) {
-// 	input := `<article> 		<header>
-// 	<h1>
-// 	content
-// 	</h1>
-// 	</header> </article>`
-//
-// 	expectedTokens := [8]token.TokenType{token.OPEN_ARTICLE, token.OPEN_HEADER, token.OPEN_HEADING_1, token.CONTENT, token.CLOSED_HEADING_1, token.CLOSED_HEADER, token.CLOSED_ARTICLE, token.EOF}
-//
-// 	l := New(input)
-//
-// 	for i, expectedType := range expectedTokens {
-//
-// 		tok := l.NextToken()
-//
-// 		if tok.Type != expectedType {
-// 			t.Errorf("tests compare token number[%d] - token type wrong. expected %s, got=%s", i, token.TokenType.ToString(expectedType), token.TokenType.ToString(tok.Type))
-// 		}
-// 	}
-// }
+// BUG: now fix this test and see that the above test keeps working
+func TestRegression(t *testing.T) {
+	input := `<article> 		<header>
+	<h1>
+	content
+	</h1>
+	</header> </article>`
+
+	expectedTokens := [8]token.TokenType{token.OPEN_ARTICLE, token.OPEN_HEADER, token.OPEN_HEADING_1, token.CONTENT, token.CLOSED_HEADING_1, token.CLOSED_HEADER, token.CLOSED_ARTICLE, token.EOF}
+
+	l := New(input)
+
+	for i, expectedType := range expectedTokens {
+
+		tok := l.NextToken()
+
+		if tok.Type != expectedType {
+			t.Errorf("tests compare token number[%d] - token type wrong. expected %s, got=%s", i, token.TokenType.ToString(expectedType), token.TokenType.ToString(tok.Type))
+		}
+	}
+}
 
 // func TestGetNextToken(t *testing.T) {
 // 	input := `<article> 		<header>

@@ -73,7 +73,6 @@ func (l *Lexer) makeErrorToken() token.Token {
 }
 
 func (l *Lexer) makeHtmlElementToken() token.Token {
-	// BUG: range start is range inclusive and the end is range exclusive
 	ref := l.Input[l.startPos:l.currPos]
 	var ttype = token.HtmlReferenceTokenMap[string(ref)]
 	// TODO do I need a pointer? Try out at the end of project
@@ -93,7 +92,6 @@ func (l *Lexer) makeContentToken() token.Token {
 
 // NOTE: Only make tokens for the html tags, no content token needed, because no manipulation of content.
 func (l *Lexer) consumeTag() token.Token {
-	// BUG: runt test, the '>' doensnt' get consumed and is still in
 	tok := token.Token{}
 
 	for l.peekConsumedChar() != '>' {
@@ -104,8 +102,6 @@ func (l *Lexer) consumeTag() token.Token {
 	return tok
 }
 
-// BUG: I have create tokens for the content as well, otherwise when i parse <article> bla bla </article>
-// lexer will return a token for <article> for now just consumes the content and sets l.start
 func (l *Lexer) NextToken() token.Token {
 
 	tok := token.Token{}
@@ -163,7 +159,6 @@ func (l *Lexer) NextToken() token.Token {
 			tok = token.Token{Type: token.EOF, StartPos: l.currPos}
 			return tok
 
-			// BUG: default option should be create content token. I want to keep track of the plain text or content that is between tags and should be left untouched by the markdown transpiler
 		default:
 			l.readChar()
 		}
@@ -191,16 +186,6 @@ func (l *Lexer) NextToken() token.Token {
 
 			}
 			tok := l.consumeTag()
-			// BUG: see coment 31/08/2025
-			// if tok.Type == token.OPEN_HEADING_1 {
-			//
-			// 	for l.char != '>' {
-			// 		l.readChar()
-			// 	}
-			//
-			// 	tok := l.makeContentToken()
-			// 	return tok
-			// }
 			return tok
 
 			// NOTE:  EOF we set byte to 0 in readchar 0x00 when we reach the end of the input
