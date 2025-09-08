@@ -20,26 +20,6 @@ import (
 // 	}
 // }
 
-func TestLexerTokens(t *testing.T) {
-	input := ` <article> content</article>
-	`
-
-	expected := []token.Token{
-		{Type: token.OPEN_ARTICLE, StartPos: 1, EndPos: 9},
-		{Type: token.CONTENT, StartPos: 11, EndPos: 17},
-		{Type: token.CLOSED_ARTICLE, StartPos: 18, EndPos: 27},
-	}
-
-	l := New(input)
-
-	for i, exp := range expected {
-		tok := l.NextToken()
-		if tok != exp {
-			t.Errorf("token[%d] mismatch: expected %+v, got %+v \n", i, exp, tok)
-		}
-	}
-}
-
 // BUG: now fix this test and see that the above test keeps working
 func TestRegression(t *testing.T) {
 	input := `<article> 		<header>

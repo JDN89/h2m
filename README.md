@@ -5,8 +5,8 @@ Maybe I'll generalize it, so it works with all sorts of blogs.
 
 ## TODO
 
-- [ ] rename peekCurrent, currPos, peekNext(). naming is confusing
-- [ ] fix makeContentTokenTest. After making htmlToken the '>' doesn't get consumed and is still in l.char. Consume last char after making the token sounds better, so the nextToken is properly set for the next run! breakpoint in consumeTag()
+- [ ] rip out l.char and just use currPos() and just use currPos. See log 08/09/2025.
+- [ ] fix regressionTest
 - [ ] fix anchor tag token not recognized
 - [ ] Get the content out of the h1 tag
 - [ ] create todos based on my comment of 21/08/2025
@@ -16,6 +16,8 @@ Maybe I'll generalize it, so it works with all sorts of blogs.
 
 ## DONE
 
+- [x] rename peekCurrent, currPos, peekNext(). naming is confusing
+- [x] fix makeContentTokenTest. After making htmlToken the '>' doesn't get consumed and is still in l.char. Consume last char after making the token sounds better, so the nextToken is properly set for the next run! breakpoint in consumeTag()
 - [x] default option in lexer should not be readChar(), but should be makeContentToken().
 - [x] fix bug lexing:`<article><header> content </header> </article>`
 - [x] fix bug parsing `<article>` content `</article>` -- endless loop
@@ -29,7 +31,13 @@ Maybe I'll generalize it, so it works with all sorts of blogs.
 - setup lexer
 - define html tags to scan (tokens)
 
-## NOTES
+## LOG
+
+### 08/09/2025
+
+Current bug is mismathc between when I use currPos and lastConsumedChar. sometimes I switch on currPos and other times on lastConsumedChar, which causes bugs and mismatch between how I expect the lexer to work. Because In some cases I have to sonsume the currPos so it gets loaded in l.char because that is the position I am switching on. What if I rip out lastConsumedChar and just use currPos and currPos + 1? I think that will cause less confusion for me.
+
+Try this week on fix branch
 
 ### 03/09/2025
 
