@@ -7,10 +7,10 @@ import (
 
 // TODO make input private. Now public for debug purposes
 type Lexer struct {
-	Input    string
-	startPos int
-	currPos  int
-	char     byte
+	Input            string
+	startPos         int
+	currPos          int
+	lastConsumedChar byte
 	//TODO think of better way to start and stop lexing
 	start bool
 	stop  bool
@@ -30,20 +30,20 @@ func (l *Lexer) readChar() {
 	// fmt.Printf("inside readchar function %c \n", l.char)
 	if l.currPos >= len(l.Input) {
 		// end of file reached
-		l.char = 0
+		l.lastConsumedChar = 0
 	} else {
-		l.char = l.Input[l.currPos]
+		l.lastConsumedChar = l.Input[l.currPos]
 	}
 	l.currPos++
 }
 
-func (l *Lexer) peekCurrent() byte {
-	return l.char
+func (l *Lexer) peekConsumedChar() byte {
+	return l.lastConsumedChar
 }
 
 func (l *Lexer) consumeWhiteSpaceLineBreaks() {
 	for {
-		ch := l.peekCurrent()
+		ch := l.peekCurrPos()
 		if ch != ' ' && ch != '\n' && ch != '\r' && ch != '\b' && ch != '\t' {
 			break
 		}
@@ -51,7 +51,7 @@ func (l *Lexer) consumeWhiteSpaceLineBreaks() {
 	}
 }
 
-func (l *Lexer) peekNext() byte {
+func (l *Lexer) peekCurrPos() byte {
 	if l.currPos == len(l.Input) {
 		fmt.Printf("At end of input can't peek next character in the input stream! \n")
 	}
@@ -74,18 +74,20 @@ func (l *Lexer) makeErrorToken() token.Token {
 
 func (l *Lexer) makeHtmlElementToken() token.Token {
 	// BUG: range start is range inclusive and the end is range exclusive
-	ref := l.Input[l.startPos : l.currPos+1]
+	ref := l.Input[l.startPos:l.currPos]
 	var ttype = token.HtmlReferenceTokenMap[string(ref)]
 	// TODO do I need a pointer? Try out at the end of project
-	return token.Token{Type: ttype, StartPos: l.startPos, EndPos: l.currPos}
+	return token.Token{Type: ttype, StartPos: l.startPos, EndPos: l.currPos - 1}
 }
 
 func (l *Lexer) makeContentToken() token.Token {
 	start := l.currPos
-	for l.char != '<' {
+	for l.peekCurrPos() != '<' {
 		l.readChar()
 	}
 	end := l.currPos - 1
+	// consume '<' so it gets loaded in lastConsumedChar
+	l.readChar()
 	return token.Token{Type: token.CONTENT, StartPos: start, EndPos: end}
 }
 
@@ -94,13 +96,11 @@ func (l *Lexer) consumeTag() token.Token {
 	// BUG: runt test, the '>' doensnt' get consumed and is still in
 	tok := token.Token{}
 
-	for l.peekNext() != '>' {
+	for l.peekConsumedChar() != '>' {
 		l.readChar()
 	}
 
 	tok = l.makeHtmlElementToken()
-	//consume '>'
-	l.readChar()
 	return tok
 }
 
@@ -137,7 +137,7 @@ func (l *Lexer) NextToken() token.Token {
 	// NOTE: Loop that keeps consuming chars, until TOKEN_ARTICLE is encountered
 	// TODO: clenaup, all this stuf can probably set in the same for loop?
 	for l.start == false && l.stop == false {
-		switch l.char {
+		switch l.lastConsumedChar {
 
 		// NOTE: consume until you reach <article>
 		//TODO: what to do after we parsed </article>
@@ -171,12 +171,12 @@ func (l *Lexer) NextToken() token.Token {
 	}
 	// NOTE: Loop that consumes html tags between the <article> </article> tags
 	for l.start == true && l.stop == false {
-		switch l.char {
+		switch l.lastConsumedChar {
 		case '<':
 			// -1 because l.currPos allreay points to the next char in the input
 			l.startPos = l.currPos - 1
 			l.readChar()
-			if l.peekCurrent() == '/' {
+			if l.peekConsumedChar() == '/' {
 				//BUG set breakpoint here
 				l.readChar()
 				tok := l.consumeTag()
@@ -187,7 +187,7 @@ func (l *Lexer) NextToken() token.Token {
 				return tok
 			}
 			// NOTE: <a href= "">
-			if l.peekCurrent() == 'a' {
+			if l.peekConsumedChar() == 'a' {
 
 			}
 			tok := l.consumeTag()

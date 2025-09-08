@@ -5,6 +5,7 @@ Maybe I'll generalize it, so it works with all sorts of blogs.
 
 ## TODO
 
+- [ ] rename peekCurrent, currPos, peekNext(). naming is confusing
 - [ ] fix makeContentTokenTest. After making htmlToken the '>' doesn't get consumed and is still in l.char. Consume last char after making the token sounds better, so the nextToken is properly set for the next run! breakpoint in consumeTag()
 - [ ] fix anchor tag token not recognized
 - [ ] Get the content out of the h1 tag
