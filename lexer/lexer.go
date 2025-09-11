@@ -5,6 +5,14 @@ import (
 	"h2m/token"
 )
 
+type Mode int
+
+const (
+	MODE_OUTSIDE_ARTICLE Mode = iota
+	MODE_INSIDE_ARTICLE
+	MODE_DONE
+)
+
 // TODO make input private. Now public for debug purposes
 type Lexer struct {
 	Input    string
@@ -12,14 +20,12 @@ type Lexer struct {
 	currPos  int
 	char     byte
 	//TODO think of better way to start and stop lexing
-	start bool
-	stop  bool
+	mode Mode
 }
 
 func New(input string) *Lexer {
-	l := &Lexer{Input: input}
-	// load first char into the lexer. I was first doing this at the beginning of NextToken, but this breaks when we start parsing the second token, because < is allready loaded into the lexer
-	l.readChar()
+	l := &Lexer{Input: input, mode: MODE_OUTSIDE_ARTICLE}
+	l.readChar() // prime first char
 	return l
 }
 
@@ -52,20 +58,6 @@ func (l *Lexer) peekCurrPos() byte {
 		fmt.Printf("At end of input can't peek next character in the input stream! \n")
 	}
 	return l.Input[l.currPos]
-}
-
-func isChar(char byte) bool {
-	return char >= 'a' && char <= 'z' || char >= 'A' && char <= 'Z'
-}
-func isCharOrNumber(char byte) bool {
-
-	return char >= 'a' && char <= 'z' || char >= 'A' && char <= 'Z' || char >= '0' && char <= '9'
-}
-
-// NOTE: Token should contain a proper errorMessage. But I want to keep my tokens as lightweight as possilbe.
-// Use different Error tokens, and based on the type of error token and position of  the error I can give a clear error message
-func (l *Lexer) makeErrorToken() token.Token {
-	return token.Token{Type: token.ERROR_NO_CLOSING_TAG, StartPos: l.currPos}
 }
 
 func (l *Lexer) makeHtmlElementToken() token.Token {
@@ -118,87 +110,58 @@ func (l *Lexer) NextToken() token.Token {
 
 	l.startPos = l.currPos
 
-	// as long start == false keep reading char
-	// check encounter <article>
-	// set start == true
+	switch l.mode {
 
-	// NOTE: no pointer because the struct is very small.
-	// TODO: test impact of using pointer once project is finished
-
-	// Parsed </article>
-	for l.start == false && l.stop == true {
-		l.readChar()
+	case MODE_DONE:
+		return token.Token{Type: token.EOF, StartPos: l.currPos}
+	case MODE_INSIDE_ARTICLE:
+		return l.lexInsideArticle()
+	case MODE_OUTSIDE_ARTICLE:
+		return l.lexOutsideArticle()
+	default:
+		panic(fmt.Sprintf("unexpected lexer.Mode: %#v", l.mode))
 	}
 
-	// NOTE: Loop that keeps consuming chars, until TOKEN_ARTICLE is encountered
-	// TODO: clenaup, all this stuf can probably set in the same for loop?
-	for l.start == false && l.stop == false {
-		switch l.char {
+}
 
-		// NOTE: consume until you reach <article>
-		//TODO: what to do after we parsed </article>
-		case '<':
-			// NOTE: because I don't make a token for content, we consume the content with the token that follows, which means we have to set the l.start when we arrive at '<'
-			// -1 because once char is and set, currPos allready points to the next char to be consumed
-			l.startPos = l.currPos - 1
-			l.readChar()
-			//NOTE: we consume the <tag> and make a token
-			tok = l.consumeTag()
-			// start lexing content of the blog article
-			if tok.Type == token.OPEN_ARTICLE {
-				l.start = true
-				return tok
-			}
-			// in case we don't find a closing tag for the html tag
-			if tok.Type == token.ERROR_NO_CLOSING_TAG {
-				return tok
-			}
-
-		// Stop parsing when we reach EOF, in that case we set char in readchar to 0 and hit this case
-		case 0:
-			tok = token.Token{Type: token.EOF, StartPos: l.currPos}
-			return tok
-
-		default:
-			l.readChar()
-		}
-
-	}
-	// NOTE: Loop that consumes html tags between the <article> </article> tags
-	for l.start == true && l.stop == false {
+func (l *Lexer) lexOutsideArticle() token.Token {
+	for {
 		switch l.char {
 		case '<':
-			// -1 because l.currPos allreay points to the next char in the input
 			l.startPos = l.currPos - 1
 			l.readChar()
-			if l.char == '/' {
-				//BUG set breakpoint here
-				l.readChar()
-				tok := l.consumeTag()
-				if tok.Type == token.CLOSED_ARTICLE {
-					l.stop = true
-					l.start = false
-				}
-				return tok
-			}
-			// NOTE: <a href= "">
-			//TODO: implement
-			if l.char == 'a' {
-
-			}
 			tok := l.consumeTag()
+			if tok.Type == token.OPEN_ARTICLE {
+				l.mode = MODE_INSIDE_ARTICLE
+				return tok
+			}
 			return tok
-
-			// NOTE:  EOF we set byte to 0 in readchar 0x00 when we reach the end of the input
-			// I could also stop lexing at </article>, but I'll just keep reading the leftover tags
 		case 0:
-			tok = token.Token{Type: token.EOF, StartPos: l.currPos}
-			return tok
+			return token.Token{Type: token.EOF, StartPos: l.currPos}
 		default:
-			tok := l.makeContentToken()
-			return tok
-
+			l.readChar()
 		}
 	}
-	return tok
+}
+
+// Handles tokens between <article> ... </article>
+func (l *Lexer) lexInsideArticle() token.Token {
+	switch l.char {
+	case '<':
+		l.startPos = l.currPos - 1
+		l.readChar()
+		if l.char == '/' {
+			l.readChar()
+			tok := l.consumeTag()
+			if tok.Type == token.CLOSED_ARTICLE {
+				l.mode = MODE_DONE
+			}
+			return tok
+		}
+		return l.consumeTag()
+	case 0:
+		return token.Token{Type: token.EOF, StartPos: l.currPos}
+	default:
+		return l.makeContentToken()
+	}
 }

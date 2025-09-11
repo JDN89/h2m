@@ -5,10 +5,9 @@ Maybe I'll generalize it, so it works with all sorts of blogs.
 
 ## TODO
 
-- [ ] rip out l.char and just use currPos() and just use currPos. See log 08/09/2025.
-- [ ] fix regressionTest
-- [ ] fix anchor tag token not recognized
+- [ ] fix anchor tag token not recognized -> dummy it's not in convertTokenToString
 - [ ] Get the content out of the h1 tag
+- [ ] parse a href
 - [ ] create todos based on my comment of 21/08/2025
 - [ ] If I want to be able to get rid of the bloat inside html tags. I must store the beginning of the tag but also of the content. Or mayby I don't need to store the conent, and storing the start and endo of the tags is just enough, and I just replace the complete tag with the equivalent markdown content.
 - [ ] after parsing the header start generating markdown based on the token stream
@@ -25,6 +24,11 @@ Maybe I'll generalize it, so it works with all sorts of blogs.
 - [x] finish parsing first html element correctly
 - [x] rename vars in lexer_test.go. atm confusing naming
 
+## CANCELLED TASKS
+
+- [x] rip out l.char and just use currPos() and just use currPos. See log 08/09/2025.
+- [x] fix regressionTest
+
 ## Steps
 
 - Get html content
@@ -32,6 +36,12 @@ Maybe I'll generalize it, so it works with all sorts of blogs.
 - define html tags to scan (tokens)
 
 ## LOG
+
+### 11/09/2025
+
+Using 2 booleans was making it very cumbersome to see in which state (you get it state) I am. I was using start and stop to indincate that I encountered the open_article and close_article tokens and that I could start generating and stop generating the tokens. I now converted it to a state machine which make it easier to have an overview of which state we are in. from there I als call the appropriat lexing functions, which is logic I pulled of the nextToken function. to make it more readable.
+If your program swithces between states/modes just use enums instead of booleans. More descriptive.
+Inside the lex functions I can use substates to parse complex tags. Tag_name tag_xxx. but this I probably won't need in my case.
 
 ### 08/09/2025
 
