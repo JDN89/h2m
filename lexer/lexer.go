@@ -13,14 +13,13 @@ const (
 	MODE_DONE
 )
 
-// TODO make input private. Now public for debug purposes
+// TODO: make input private. Now public for debug purposes
 type Lexer struct {
 	Input    string
 	startPos int
 	currPos  int
 	char     byte
-	//TODO think of better way to start and stop lexing
-	mode Mode
+	mode     Mode
 }
 
 func New(input string) *Lexer {
@@ -30,7 +29,6 @@ func New(input string) *Lexer {
 }
 
 // ReadChar will load the curernt char in l.char and advance currPos to +1
-// TODO probably have to rename currPos
 func (l *Lexer) readChar() {
 	// TODO clenaup, leave now for debuggin purposes
 	// fmt.Printf("inside readchar function %c \n", l.char)
@@ -78,7 +76,6 @@ func (l *Lexer) makeContentToken() token.Token {
 	return token.Token{Type: token.CONTENT, StartPos: start, EndPos: end}
 }
 
-// NOTE: Only make tokens for the html tags, no content token needed, because no manipulation of content.
 func (l *Lexer) consumeTag() token.Token {
 	tok := token.Token{}
 
