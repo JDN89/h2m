@@ -7,10 +7,10 @@ import (
 
 // TODO make input private. Now public for debug purposes
 type Lexer struct {
-	Input            string
-	startPos         int
-	currPos          int
-	lastConsumedChar byte
+	Input    string
+	startPos int
+	currPos  int
+	char     byte
 	//TODO think of better way to start and stop lexing
 	start bool
 	stop  bool
@@ -30,20 +30,16 @@ func (l *Lexer) readChar() {
 	// fmt.Printf("inside readchar function %c \n", l.char)
 	if l.currPos >= len(l.Input) {
 		// end of file reached
-		l.lastConsumedChar = 0
+		l.char = 0
 	} else {
-		l.lastConsumedChar = l.Input[l.currPos]
+		l.char = l.Input[l.currPos]
 	}
 	l.currPos++
 }
 
-func (l *Lexer) peekConsumedChar() byte {
-	return l.lastConsumedChar
-}
-
 func (l *Lexer) consumeWhiteSpaceLineBreaks() {
 	for {
-		ch := l.peekCurrPos()
+		ch := l.char
 		if ch != ' ' && ch != '\n' && ch != '\r' && ch != '\b' && ch != '\t' {
 			break
 		}
@@ -94,11 +90,15 @@ func (l *Lexer) makeContentToken() token.Token {
 func (l *Lexer) consumeTag() token.Token {
 	tok := token.Token{}
 
-	for l.peekConsumedChar() != '>' {
+	for l.char != '>' {
 		l.readChar()
 	}
 
 	tok = l.makeHtmlElementToken()
+
+	// consume '>' and load next char into lexer.char
+	l.readChar()
+
 	return tok
 }
 
@@ -133,7 +133,7 @@ func (l *Lexer) NextToken() token.Token {
 	// NOTE: Loop that keeps consuming chars, until TOKEN_ARTICLE is encountered
 	// TODO: clenaup, all this stuf can probably set in the same for loop?
 	for l.start == false && l.stop == false {
-		switch l.lastConsumedChar {
+		switch l.char {
 
 		// NOTE: consume until you reach <article>
 		//TODO: what to do after we parsed </article>
@@ -166,12 +166,12 @@ func (l *Lexer) NextToken() token.Token {
 	}
 	// NOTE: Loop that consumes html tags between the <article> </article> tags
 	for l.start == true && l.stop == false {
-		switch l.lastConsumedChar {
+		switch l.char {
 		case '<':
 			// -1 because l.currPos allreay points to the next char in the input
 			l.startPos = l.currPos - 1
 			l.readChar()
-			if l.peekConsumedChar() == '/' {
+			if l.char == '/' {
 				//BUG set breakpoint here
 				l.readChar()
 				tok := l.consumeTag()
@@ -183,7 +183,7 @@ func (l *Lexer) NextToken() token.Token {
 			}
 			// NOTE: <a href= "">
 			//TODO: implement
-			if l.peekConsumedChar() == 'a' {
+			if l.char == 'a' {
 
 			}
 			tok := l.consumeTag()

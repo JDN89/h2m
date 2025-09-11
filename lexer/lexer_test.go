@@ -22,6 +22,9 @@ import (
 
 // BUG: now fix this test and see that the above test keeps working
 func TestRegression(t *testing.T) {
+	// input := `<article> 		<header>
+	// </header> </article>`
+
 	input := `<article> 		<header>
 	<h1>
 	content
