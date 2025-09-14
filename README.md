@@ -39,6 +39,13 @@ Maybe I'll generalize it, so it works with all sorts of blogs.
 
 ## LOG
 
+### 14/09/2025
+
+I had some time this afternoon, to program, but instead I spend the better part of an hour on tweaking my neovim lsp config... Got it working tough :D Somehow signature help didn't work (anymore?).
+I found a bug in recoginzing html tags. I usualy look exact match for recognizing tags. but tags can have attributes, ... so exact match for a tag doesn't work. I found a strings.HasPrefix builtin method of go, and intead I'll create the relevant tokens if the tag starts with ....
+
+I still have an issue with recognizing anchor tags, but is for tomorrow. Today I fixed my lsp. Which is also time well spend, seeing that I love using neovim.
+
 ### 11/09/2025
 
 Using 2 booleans was making it very cumbersome to see in which state (you get it state) I am. I was using start and stop to indincate that I encountered the open_article and close_article tokens and that I could start generating and stop generating the tokens. I now converted it to a state machine which make it easier to have an overview of which state we are in. from there I als call the appropriat lexing functions, which is logic I pulled of the nextToken function. to make it more readable.

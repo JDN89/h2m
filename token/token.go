@@ -25,7 +25,8 @@ const (
 	EOF
 	ERROR_NO_CLOSING_TAG
 	CONTENT
-	ANCHOR
+	ANCHOR_OPEN
+	ANCHOR_CLOSED
 )
 
 // NOTE I can leave TokenType out of the onst enum expression and implictly cast the int to TokenType
@@ -45,6 +46,8 @@ var tokenTypeToString = map[TokenType]string{
 	CLOSED_HEADER:    "</header>",
 	OPEN_HEADING_1:   "<h1>",
 	CLOSED_HEADING_1: "</h1>",
+	ANCHOR_OPEN:      "<a href>",
+	ANCHOR_CLOSED:    "</a href>",
 }
 
 func (t TokenType) ToString() string {

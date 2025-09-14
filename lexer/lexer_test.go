@@ -38,7 +38,7 @@ func TestGetNextToken(t *testing.T) {
 	</h1>
 	</header> </article>`
 
-	expectedTokens := [9]token.TokenType{token.OPEN_ARTICLE, token.OPEN_HEADER, token.OPEN_HEADING_1, token.ANCHOR, token.CONTENT, token.CLOSED_HEADING_1, token.CLOSED_HEADER, token.CLOSED_ARTICLE, token.EOF}
+	expectedTokens := [10]token.TokenType{token.OPEN_ARTICLE, token.OPEN_HEADER, token.OPEN_HEADING_1, token.ANCHOR_OPEN, token.CONTENT, token.ANCHOR_CLOSED, token.CLOSED_HEADING_1, token.CLOSED_HEADER, token.CLOSED_ARTICLE, token.EOF}
 
 	l := New(input)
 

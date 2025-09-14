@@ -2,6 +2,8 @@ package lexer
 
 import (
 	"fmt"
+	"strings"
+
 	"h2m/token"
 )
 
@@ -60,13 +62,17 @@ func (l *Lexer) peekCurrPos() byte {
 
 func (l *Lexer) makeHtmlElementToken() token.Token {
 	ref := l.Input[l.startPos:l.currPos]
-	var ttype = token.HtmlReferenceTokenMap[string(ref)]
+
+	if strings.HasPrefix(ref, "a href") {
+		return token.Token{Type: token.ANCHOR_OPEN, StartPos: l.startPos, EndPos: l.currPos - 1}
+	}
+	ttype := token.HtmlReferenceTokenMap[string(ref)]
 	// TODO do I need a pointer? Try out at the end of project
 	return token.Token{Type: ttype, StartPos: l.startPos, EndPos: l.currPos - 1}
 }
 
 func (l *Lexer) makeContentToken() token.Token {
-	//BUG: I now use exact mathces to recognisze  a tag. But tags can have attributes, so better to
+	// BUG: I now use exact mathces to recognisze  a tag. But tags can have attributes, so better to
 	// Use strings.HasPrefix package:
 	// https://pkg.go.dev/strings?utm_source=chatgpt.com#HasPrefix
 	// start := l.currPos
@@ -76,7 +82,7 @@ func (l *Lexer) makeContentToken() token.Token {
 	end := l.currPos - 1
 	// consume '<' so it gets loaded in lastConsumedChar
 	l.readChar()
-	return token.Token{Type: token.CONTENT, StartPos: start, EndPos: end}
+	return token.Token{Type: token.CONTENT, StartPos: l.startPos, EndPos: end}
 }
 
 func (l *Lexer) consumeTag() token.Token {
@@ -95,7 +101,6 @@ func (l *Lexer) consumeTag() token.Token {
 }
 
 func (l *Lexer) NextToken() token.Token {
-
 	tok := token.Token{}
 
 	if l.currPos >= len(l.Input) {
@@ -121,7 +126,6 @@ func (l *Lexer) NextToken() token.Token {
 	default:
 		panic(fmt.Sprintf("unexpected lexer.Mode: %#v", l.mode))
 	}
-
 }
 
 func (l *Lexer) lexOutsideArticle() token.Token {
