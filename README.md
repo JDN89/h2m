@@ -51,6 +51,9 @@ I found a bug in recoginzing html tags. I usualy look exact match for recognizin
 
 I still have an issue with recognizing anchor tags, but is for tomorrow. Today I fixed my lsp. Which is also time well spend, seeing that I love using neovim.
 
+Solved anchor tag issue. I think the simplest thing I can do now to fix the BUG where tags don't get recognized if they have attribtes, because now I look up a tag based on an exact match on `<h1>`, is by implementing a TRIE similar to the implementation of [TRIE in crafting interpretres chapter 16](https://craftinginterpreters.com/scanning-on-demand.html#tries-and-state-machines)
+Place TRIE logic in consumeTag and refactor makeHtmltoken
+
 ### 11/09/2025
 
 Using 2 booleans was making it very cumbersome to see in which state (you get it state) I am. I was using start and stop to indincate that I encountered the open_article and close_article tokens and that I could start generating and stop generating the tokens. I now converted it to a state machine which make it easier to have an overview of which state we are in. from there I als call the appropriat lexing functions, which is logic I pulled of the nextToken function. to make it more readable.
@@ -148,12 +151,12 @@ Learned about writing and running tests in Go, packages, ...
 [Learning Go, and the `type` keyword is incredibly powerful and makes code more readable](https://www.reddit.com/r/golang/comments/1at369q/learning_go_and_the_type_keyword_is_incredibly/?share_id=o6o5D80TE1fQ8s9dnDslU&utm_content=2&utm_medium=android_app&utm_name=androidcss&utm_source=share&utm_term=2) \
 [moving from classes to golang](https://www.reddit.com/r/golang/comments/1ebcp85/moving_from_classes_to_golang/) \
 [labeld loops](https://stackoverflow.com/questions/46792159/labels-break-vs-continue-vs-goto)
-
 [mutable-strings-in-golang](https://medium.com/kokster/mutable-strings-in-golang-298d422d01bc) \
 [strings-in-golang](https://www.geeksforgeeks.org/go-language/strings-in-golang/) \
-[stack-overflow-how-to-check-value-in-map-go](https://stackoverflow.com/questions/2050391/how-to-check-if-a-map-contains-a-key-in-go)
+[stack-overflow-how-to-check-value-in-map-go](https://stackoverflow.com/questions/2050391/how-to-check-if-a-map-contains-a-key-in-go) \
+[strings package of go](https://pkg.go.dev/strings?utm_source=chatgpt.com#HasPrefix) \
+[TRIE in crafting interpretres chapter 16](https://craftinginterpreters.com/scanning-on-demand.html#tries-and-state-machines) \
 
-[strings package of go](https://pkg.go.dev/strings?utm_source=chatgpt.com#HasPrefix)
 Type definitions (not type aliases) zijn heel krachtig. Kan je bijvoorbeeld van een int een type maken specifiek voor je domein. Je type erft geen methods van het bovenliggen type en je kan je eigen methodes voor dat type specifieren. Verder kan je niet impliciet van int naar je type converten. Je moet **expliciet casten**. Verder type system info opzoeken en mee experimenteren. Waarschijnlijk ook meer lightweight dan maken van een class in Java. Per file kan je meerdere types definieren.
 
 ### Mapping html to markdown

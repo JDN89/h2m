@@ -89,6 +89,7 @@ func (l *Lexer) makeContentToken() token.Token {
 	return token.Token{Type: token.CONTENT, StartPos: l.startPos, EndPos: end}
 }
 
+// TODO: USE TRIE here and refactor then makeHtmlElementToken
 func (l *Lexer) consumeTag() token.Token {
 	tok := token.Token{}
 
