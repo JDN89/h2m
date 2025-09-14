@@ -63,8 +63,12 @@ func (l *Lexer) peekCurrPos() byte {
 func (l *Lexer) makeHtmlElementToken() token.Token {
 	ref := l.Input[l.startPos:l.currPos]
 
-	if strings.HasPrefix(ref, "a href") {
+	if strings.HasPrefix(ref, "<a href") {
 		return token.Token{Type: token.ANCHOR_OPEN, StartPos: l.startPos, EndPos: l.currPos - 1}
+	}
+	if strings.HasPrefix(ref, "</a>") {
+		return token.Token{Type: token.ANCHOR_CLOSED, StartPos: l.startPos, EndPos: l.currPos - 1}
+
 	}
 	ttype := token.HtmlReferenceTokenMap[string(ref)]
 	// TODO do I need a pointer? Try out at the end of project

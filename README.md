@@ -15,6 +15,11 @@ Maybe I'll generalize it, so it works with all sorts of blogs.
 - [ ] after parsing the header start generating markdown based on the token stream
 - [ ] checkout Go release 1.25 and the note about [faster slices](https://go.dev/doc/go1.25#faster-slices), [other article](https://bitstack.substack.com/p/go-125-compiler-update-stronger-alignment),[dreams of code video](https://www.youtube.com/watch?v=8fcjcoXXMVQ)
 
+#### optimize
+
+- [ ] use channels : see one of my notes
+- [ ] use trie in lexer (see todo)
+
 ## DONE
 
 - [x] rename peekCurrent, currPos, peekNext(). naming is confusing
@@ -37,7 +42,7 @@ Maybe I'll generalize it, so it works with all sorts of blogs.
 - setup lexer
 - define html tags to scan (tokens)
 
-## LOG
+## LOG -- quick notes, full of spelling mistakes and chaotic ramblings
 
 ### 14/09/2025
 
