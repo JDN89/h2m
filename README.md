@@ -5,6 +5,8 @@ Maybe I'll generalize it, so it works with all sorts of blogs.
 
 ## TODO
 
+- [ ] recognized bug, document and use go strings HasPrefix package
+- [ ] anchor token, content token, anchor closing token. is enough to lex an anchor tag
 - [ ] fix anchor tag token not recognized -> dummy it's not in convertTokenToString
 - [ ] Get the content out of the h1 tag
 - [ ] parse a href
@@ -139,6 +141,7 @@ Learned about writing and running tests in Go, packages, ...
 [strings-in-golang](https://www.geeksforgeeks.org/go-language/strings-in-golang/) \
 [stack-overflow-how-to-check-value-in-map-go](https://stackoverflow.com/questions/2050391/how-to-check-if-a-map-contains-a-key-in-go)
 
+[strings package of go](https://pkg.go.dev/strings?utm_source=chatgpt.com#HasPrefix)
 Type definitions (not type aliases) zijn heel krachtig. Kan je bijvoorbeeld van een int een type maken specifiek voor je domein. Je type erft geen methods van het bovenliggen type en je kan je eigen methodes voor dat type specifieren. Verder kan je niet impliciet van int naar je type converten. Je moet **expliciet casten**. Verder type system info opzoeken en mee experimenteren. Waarschijnlijk ook meer lightweight dan maken van een class in Java. Per file kan je meerdere types definieren.
 
 ### Mapping html to markdown

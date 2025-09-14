@@ -66,7 +66,10 @@ func (l *Lexer) makeHtmlElementToken() token.Token {
 }
 
 func (l *Lexer) makeContentToken() token.Token {
-	start := l.currPos
+	//BUG: I now use exact mathces to recognisze  a tag. But tags can have attributes, so better to
+	// Use strings.HasPrefix package:
+	// https://pkg.go.dev/strings?utm_source=chatgpt.com#HasPrefix
+	// start := l.currPos
 	for l.peekCurrPos() != '<' {
 		l.readChar()
 	}
