@@ -5,11 +5,6 @@ Maybe I'll generalize it, so it works with all sorts of blogs.
 
 ## TODO
 
-- [ ] recognized bug, document and use go strings HasPrefix package
-- [ ] anchor token, content token, anchor closing token. is enough to lex an anchor tag
-- [ ] fix anchor tag token not recognized -> dummy it's not in convertTokenToString
-- [ ] Get the content out of the h1 tag
-- [ ] parse a href
 - [ ] create todos based on my comment of 21/08/2025
 - [ ] If I want to be able to get rid of the bloat inside html tags. I must store the beginning of the tag but also of the content. Or mayby I don't need to store the conent, and storing the start and endo of the tags is just enough, and I just replace the complete tag with the equivalent markdown content.
 - [ ] after parsing the header start generating markdown based on the token stream
@@ -22,6 +17,11 @@ Maybe I'll generalize it, so it works with all sorts of blogs.
 
 ## DONE
 
+- [x] use trie like data structure in lexer (see todo)
+- [x] fix anchor tag token not recognized -> dummy it's not in convertTokenToString
+- [x] Get the content out of the h1 tag
+- [x] anchor token, content token, anchor closing token. is enough to lex an anchor tag
+- [x] recognized bug, document and use go strings HasPrefix package
 - [x] rename peekCurrent, currPos, peekNext(). naming is confusing
 - [x] fix makeContentTokenTest. After making htmlToken the '>' doesn't get consumed and is still in l.char. Consume last char after making the token sounds better, so the nextToken is properly set for the next run! breakpoint in consumeTag()
 - [x] default option in lexer should not be readChar(), but should be makeContentToken().

@@ -2,8 +2,6 @@ package lexer
 
 import (
 	"fmt"
-	"strings"
-
 	"h2m/token"
 )
 
@@ -60,26 +58,16 @@ func (l *Lexer) peekCurrPos() byte {
 	return l.Input[l.currPos]
 }
 
-func (l *Lexer) makeHtmlElementToken() token.Token {
-	ref := l.Input[l.startPos:l.currPos]
+func (l *Lexer) makeHtmlElementToken(ttype token.TokenType) token.Token {
 
-	if strings.HasPrefix(ref, "<a href") {
-		return token.Token{Type: token.ANCHOR_OPEN, StartPos: l.startPos, EndPos: l.currPos - 1}
+	for l.char != '>' {
+		l.readChar()
 	}
-	if strings.HasPrefix(ref, "</a>") {
-		return token.Token{Type: token.ANCHOR_CLOSED, StartPos: l.startPos, EndPos: l.currPos - 1}
-
-	}
-	ttype := token.HtmlReferenceTokenMap[string(ref)]
 	// TODO do I need a pointer? Try out at the end of project
 	return token.Token{Type: ttype, StartPos: l.startPos, EndPos: l.currPos - 1}
 }
 
 func (l *Lexer) makeContentToken() token.Token {
-	// BUG: I now use exact mathces to recognisze  a tag. But tags can have attributes, so better to
-	// Use strings.HasPrefix package:
-	// https://pkg.go.dev/strings?utm_source=chatgpt.com#HasPrefix
-	// start := l.currPos
 	for l.peekCurrPos() != '<' {
 		l.readChar()
 	}
@@ -93,11 +81,49 @@ func (l *Lexer) makeContentToken() token.Token {
 func (l *Lexer) consumeTag() token.Token {
 	tok := token.Token{}
 
-	for l.char != '>' {
-		l.readChar()
-	}
+	switch l.char {
 
-	tok = l.makeHtmlElementToken()
+	case '/':
+		l.readChar()
+		switch l.char {
+		case 'a':
+			l.readChar()
+			switch l.char {
+			case 'r':
+				tok = l.makeHtmlElementToken(token.CLOSED_ARTICLE)
+			case '>':
+				tok = l.makeHtmlElementToken(token.ANCHOR_CLOSED)
+			}
+
+		case 'h':
+			l.readChar()
+			switch l.char {
+			case 'e':
+				tok = l.makeHtmlElementToken(token.CLOSED_HEADER)
+			case '1':
+				tok = l.makeHtmlElementToken(token.CLOSED_HEADING_1)
+			}
+		}
+
+	case 'a':
+
+		l.readChar()
+		switch l.char {
+		case 'r':
+			tok = l.makeHtmlElementToken(token.OPEN_ARTICLE)
+		case ' ':
+			tok = l.makeHtmlElementToken(token.ANCHOR_OPEN)
+
+		}
+	case 'h':
+		l.readChar()
+		switch l.char {
+		case 'e':
+			tok = l.makeHtmlElementToken(token.OPEN_HEADER)
+		case '1':
+			tok = l.makeHtmlElementToken(token.OPEN_HEADING_1)
+		}
+	}
 
 	// consume '>' and load next char into lexer.char
 	l.readChar()
@@ -157,16 +183,7 @@ func (l *Lexer) lexOutsideArticle() token.Token {
 func (l *Lexer) lexInsideArticle() token.Token {
 	switch l.char {
 	case '<':
-		l.startPos = l.currPos - 1
 		l.readChar()
-		if l.char == '/' {
-			l.readChar()
-			tok := l.consumeTag()
-			if tok.Type == token.CLOSED_ARTICLE {
-				l.mode = MODE_DONE
-			}
-			return tok
-		}
 		return l.consumeTag()
 	case 0:
 		return token.Token{Type: token.EOF, StartPos: l.currPos}
