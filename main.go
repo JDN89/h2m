@@ -20,6 +20,7 @@ func main() {
 	}
 
 	l := lexer.New(string(body))
+	// TODO: while token is not EOF, lex source en pump it into a list? Does go only have fixed size arrays? look up
 	// TODO call nextToken once I Encounter token article <article> start lexing (bool flag)
 	//stop once we encounter <article>
 
