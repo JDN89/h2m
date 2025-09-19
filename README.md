@@ -5,6 +5,7 @@ Maybe I'll generalize it, so it works with all sorts of blogs.
 
 ## TODO
 
+- [ ] converter test outputs UNKNOWN token?
 - [ ] read about type keyword, slices and arrays in go. Because I forgot the details of the go reference I read before. allready added the references.
 - [ ] output markdown
 - [ ] create todos based on my comment of 21/08/2025
