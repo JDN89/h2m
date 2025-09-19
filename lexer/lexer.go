@@ -15,14 +15,14 @@ const (
 
 // TODO: make input private. Now public for debug purposes
 type Lexer struct {
-	Input    string
+	Input    []byte
 	startPos int
 	currPos  int
 	char     byte
 	mode     Mode
 }
 
-func New(input string) *Lexer {
+func New(input []byte) *Lexer {
 	l := &Lexer{Input: input, mode: MODE_OUTSIDE_ARTICLE}
 	l.readChar() // prime first char
 	return l

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"h2m/converter"
 	"h2m/lexer"
 	"io"
 	"net/http"
@@ -19,11 +20,10 @@ func main() {
 		fmt.Println("Error reading contents of response body")
 	}
 
-	l := lexer.New(string(body))
-	// TODO: while token is not EOF, lex source en pump it into a list? Does go only have fixed size arrays? look up
-	// TODO call nextToken once I Encounter token article <article> start lexing (bool flag)
-	//stop once we encounter <article>
-
-	fmt.Println("Fetched HTML:")
-	fmt.Println("input lexer", l.Input)
+	l := lexer.New(body)
+	c := converter.New(l)
+	// TODO: I want to optimize it later. CollectTokens concrentyl and per thread then ConvertToMarkdown, and then stitch the whole back together based on there positions
+	c.CollectTokens()
+	c.ConvertToMarkdown()
+	fmt.Println("DONE")
 }

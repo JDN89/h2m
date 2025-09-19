@@ -40,7 +40,7 @@ func TestGetNextToken(t *testing.T) {
 
 	expectedTokens := [10]token.TokenType{token.OPEN_ARTICLE, token.OPEN_HEADER, token.OPEN_HEADING_1, token.ANCHOR_OPEN, token.CONTENT, token.ANCHOR_CLOSED, token.CLOSED_HEADING_1, token.CLOSED_HEADER, token.CLOSED_ARTICLE, token.EOF}
 
-	l := New(input)
+	l := New([]byte(input))
 
 	for i, expectedType := range expectedTokens {
 
