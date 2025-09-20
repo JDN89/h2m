@@ -5,8 +5,6 @@ Maybe I'll generalize it, so it works with all sorts of blogs.
 
 ## TODO
 
-- [ ] converter test outputs UNKNOWN token?
-- [ ] read about type keyword, slices and arrays in go. Because I forgot the details of the go reference I read before. allready added the references.
 - [ ] output markdown
 - [ ] create todos based on my comment of 21/08/2025
 - [ ] If I want to be able to get rid of the bloat inside html tags. I must store the beginning of the tag but also of the content. Or mayby I don't need to store the conent, and storing the start and endo of the tags is just enough, and I just replace the complete tag with the equivalent markdown content.
@@ -20,6 +18,8 @@ Maybe I'll generalize it, so it works with all sorts of blogs.
 
 ## DONE
 
+- [x] converter test outputs UNKNOWN token?
+- [x] read about type keyword, slices and arrays in go. Because I forgot the details of the go reference I read before. allready added the references.
 - [x] use trie like data structure in lexer (see todo)
 - [x] fix anchor tag token not recognized -> dummy it's not in convertTokenToString
 - [x] Get the content out of the h1 tag
@@ -49,13 +49,13 @@ Maybe I'll generalize it, so it works with all sorts of blogs.
 
 ### 20/09/2025
 
-another dump, maybe cleanup logs later (prob not)
+LOOOL -- my whole setup was wrong. I thought I was going to maninpualte the existing slice, BUUUT I can just use the golang append function. WHICH means that I don't have to go over the tokens in reverse order and thus replace the input from back to front. I can just go over the tokens in chronological order and keep appending.
+
+This is what happens if you code in 5 to 30 minute sessions over a period of 2 to 3 months. When did I start this repo?
 
 I read the go spec 2 months ago. Now that I reread the slice and array part. I realize my whole plan didn't make sense. I even think I don't need the closing tag tokens... Or at least not for a simple blog article that doesn't use tags like li ul th ,....
 
-LOOOL -- my whole setup was wrong. I thought I was going to maninpualte the existing slice, BUUUT I can just use the golang append function. WHICH means that I don't have to go over the tokens in reverse order and thus replace the input from back to front. I can just go over the tokens in chronological order and keep appending.
-
-Even my initial setup of going over it in reverse order is not good, because the performance would be boncers if after each token conversion I move the input x chars over to replace the empty spots
+Even my initial setup of going over it in reverse order is not good, because the performance would be bonkers if after each token conversion I move the input x chars over to replace the empty spots
 It is interesting tough to find out if there will be performance gains if I just manipulate the existing input. The only question I have is how I willI deal with the null values. I can just move all the chars over x positions, with each html token replacement, but that will be an expinsive action. Better to mark the empty spaces with nill and do a sort that pushes the nill values to the end ones all the tokens have been processed. I don't even know if i have to sort?. can't i just put empty '' in those spots? Probably, but I still will have to iterate over them and the byte buffer will be larger then need be. But let's find out shall we ! :)
 
 ```
@@ -82,6 +82,8 @@ b := []string{"George", "Ringo", "Pete"}
 a = append(a, b...) // equivalent to "append(a, b[0], b[1], b[2])"
 // a == []string{"John", "Paul", "George", "Ringo", "Pete"}
 ```
+
+Another dump, maybe cleanup logs later (prob not)
 
 ### 14/09/2025
 
