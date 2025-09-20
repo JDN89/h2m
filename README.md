@@ -47,6 +47,39 @@ Maybe I'll generalize it, so it works with all sorts of blogs.
 
 ## LOG -- quick notes, full of spelling mistakes and chaotic ramblings
 
+### 20/09/2025
+
+another dump, maybe cleanup logs later (prob not)
+LOOOL -- my whole setup was wrong. I thought I was going to maninpualte the existing slice, BUUUT I can just use the golang append function. WHICH means that I don't have to go over the tokens in reverse order and thus replace the input from back to front. I can just go over the tokens in chronological order and keep appending.
+
+Even my initial setup of going over it in reverse order is not good, because the performance would be boncers if after each token conversion I move the input x chars over to replace the empty spots
+It is interesting tough to find out if there will be performance gains if I just manipulate the existing input. The only question I have is how I willI deal with the null values. I can just move all the chars over x positions, with each html token replacement, but that will be an expinsive action. Better to mark the empty spaces with nill and do a sort that pushes the nill values to the end ones all the tokens have been processed. I don't even know if i have to sort?. can't i just put empty '' in those spots? Probably, but I still will have to iterate over them and the byte buffer will be larger then need be. But let's find out shall we ! :)
+
+```
+['<','h','1','>', ' ', 'c','o','n','t','e','t', ' ', '<', '/','h','1','>']
+BECOMES
+['#','','','', ' ', 'c','o','n','t','e','t', ' ', '/n', '','','','']
+```
+
+I read the go slices-intro. I will use the append function. I will go over the tokens. The html tokens I convert to markdown and append to the slice, content tokens I can just slice the input positions and append. I am not really sure if I need the closing tags? For now I will just place a linebreak when I encounter a closing tag (not taking into account the anchor tag).
+The append function appends the elements x to the end of the slice s, and grows the slice if a greater capacity is needed.
+
+```GO
+a := make([]int, 1)
+// a == []int{0}
+a = append(a, 1, 2, 3)
+// a == []int{0, 1, 2, 3}
+```
+
+To append one slice to another, use ... to expand the second argument to a list of arguments.
+
+```GO
+a := []string{"John", "Paul"}
+b := []string{"George", "Ringo", "Pete"}
+a = append(a, b...) // equivalent to "append(a, b[0], b[1], b[2])"
+// a == []string{"John", "Paul", "George", "Ringo", "Pete"}
+```
+
 ### 14/09/2025
 
 I had some time this afternoon, to program, but instead I spend the better part of an hour on tweaking my neovim lsp config... Got it working tough :D Somehow signature help didn't work (anymore?).

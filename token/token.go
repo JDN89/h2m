@@ -48,6 +48,7 @@ var tokenTypeToString = map[TokenType]string{
 	CLOSED_HEADING_1: "</h1>",
 	ANCHOR_OPEN:      "<a href>",
 	ANCHOR_CLOSED:    "</a href>",
+	CONTENT:          ">CONTENT<",
 }
 
 func (t TokenType) ToString() string {

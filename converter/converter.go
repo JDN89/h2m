@@ -33,11 +33,22 @@ func (c *Converter) advance() token.Token {
 // Receive the whole input
 // change it starting from the end
 // instead of reverting the token array, i should just do length - i, so as not having to reverse the array which would be a costly action
-func (c *Converter) ConvertToMarkdown() {
+func (c *Converter) ConvertToMarkdown() []byte {
+
+	converted := []byte{}
 
 	i := len(c.tokens)
 	for i = len(c.tokens) - 1; i >= 0; i-- {
-		ttypeString := c.tokens[i].Type.ToString()
-		fmt.Println(ttypeString)
+		tok := c.tokens[i]
+		if tok.Type == token.CONTENT {
+			sl := c.lexer.Input[tok.StartPos:tok.EndPos]
+			converted = append(converted, sl...)
+		} else {
+			converted = append(converted, []byte(GetMarkdown(tok.Type))...)
+		}
+		// ttypeString := c.tokens[i].Type.ToString()
+		// fmt.Println(ttypeString)
 	}
+
+	return converted
 }
