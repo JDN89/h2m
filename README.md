@@ -50,6 +50,9 @@ Maybe I'll generalize it, so it works with all sorts of blogs.
 ### 20/09/2025
 
 another dump, maybe cleanup logs later (prob not)
+
+I read the go spec 2 months ago. Now that I reread the slice and array part. I realize my whole plan didn't make sense. I even think I don't need the closing tag tokens... Or at least not for a simple blog article that doesn't use tags like li ul th ,....
+
 LOOOL -- my whole setup was wrong. I thought I was going to maninpualte the existing slice, BUUUT I can just use the golang append function. WHICH means that I don't have to go over the tokens in reverse order and thus replace the input from back to front. I can just go over the tokens in chronological order and keep appending.
 
 Even my initial setup of going over it in reverse order is not good, because the performance would be boncers if after each token conversion I move the input x chars over to replace the empty spots
