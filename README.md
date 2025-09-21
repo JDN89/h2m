@@ -47,6 +47,10 @@ Maybe I'll generalize it, so it works with all sorts of blogs.
 
 ## LOG -- quick notes, full of spelling mistakes and chaotic ramblings
 
+### 21/09/2025
+
+Fixed a bug in my lexer. Because l.char loads the last consumed character. currPos always points one character to far for what I want, so l.startPos = l.currPos always points one char to far. I feel this is unnecessary complexity. This has been bothering me since the start. I am doing stuff like +1 and -1 which doesn't make sense. let currPos just look at the currPos and don't work with consumed char,... create a function that just returns the char at currPos and another funtion that peeks to the next char and returns it in cased I need a functio like that.
+
 ### 20/09/2025
 
 LOOOL -- my whole setup was wrong. I thought I was going to maninpualte the existing slice, BUUUT I can just use the golang append function. WHICH means that I don't have to go over the tokens in reverse order and thus replace the input from back to front. I can just go over the tokens in chronological order and keep appending.

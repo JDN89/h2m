@@ -30,5 +30,7 @@ func TestConverter(t *testing.T) {
 		fmt.Printf("result -- %s", result)
 	}
 	c.ConvertToMarkdown()
+
+	fmt.Printf("result -- %s", result)
 	fmt.Println("Done running TestConverter")
 }

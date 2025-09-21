@@ -1,7 +1,6 @@
 package converter
 
 import (
-	"fmt"
 	"h2m/lexer"
 	"h2m/token"
 )
@@ -28,17 +27,12 @@ func (c *Converter) advance() token.Token {
 	return c.lexer.NextToken()
 }
 
-// TODO:
-// Issie is that I want to receive the whole parsed file and then revert the token order and the convret to markdown
-// Receive the whole input
-// change it starting from the end
-// instead of reverting the token array, i should just do length - i, so as not having to reverse the array which would be a costly action
 func (c *Converter) ConvertToMarkdown() []byte {
 
 	converted := []byte{}
 
-	i := len(c.tokens)
-	for i = len(c.tokens) - 1; i >= 0; i-- {
+	for i := 0; i <= len(c.tokens)-1; i++ {
+
 		tok := c.tokens[i]
 		if tok.Type == token.CONTENT {
 			sl := c.lexer.Input[tok.StartPos:tok.EndPos]

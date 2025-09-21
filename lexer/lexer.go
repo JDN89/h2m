@@ -64,7 +64,7 @@ func (l *Lexer) makeHtmlElementToken(ttype token.TokenType) token.Token {
 		l.readChar()
 	}
 	// TODO do I need a pointer? Try out at the end of project
-	return token.Token{Type: ttype, StartPos: l.startPos, EndPos: l.currPos - 1}
+	return token.Token{Type: ttype, StartPos: l.startPos - 1, EndPos: l.currPos - 1}
 }
 
 func (l *Lexer) makeContentToken() token.Token {
@@ -74,7 +74,7 @@ func (l *Lexer) makeContentToken() token.Token {
 	end := l.currPos - 1
 	// consume '<' so it gets loaded in lastConsumedChar
 	l.readChar()
-	return token.Token{Type: token.CONTENT, StartPos: l.startPos, EndPos: end}
+	return token.Token{Type: token.CONTENT, StartPos: l.startPos - 1, EndPos: end}
 }
 
 // TODO: USE TRIE here and refactor then makeHtmlElementToken
