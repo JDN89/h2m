@@ -18,32 +18,26 @@ type Lexer struct {
 	Input    []byte
 	startPos int
 	currPos  int
-	char     byte
 	mode     Mode
 }
 
 func New(input []byte) *Lexer {
 	l := &Lexer{Input: input, mode: MODE_OUTSIDE_ARTICLE}
-	l.readChar() // prime first char
 	return l
 }
 
-// ReadChar will load the curernt char in l.char and advance currPos to +1
+// ReadChar will load the curernt char in l.currentChar() and advance currPos to +1
 func (l *Lexer) readChar() {
-	// TODO clenaup, leave now for debuggin purposes
-	// fmt.Printf("inside readchar function %c \n", l.char)
-	if l.currPos >= len(l.Input) {
-		// end of file reached
-		l.char = 0
-	} else {
-		l.char = l.Input[l.currPos]
-	}
 	l.currPos++
+}
+
+func (l *Lexer) currentChar() byte {
+	return l.Input[l.currPos]
 }
 
 func (l *Lexer) consumeWhiteSpaceLineBreaks() {
 	for {
-		ch := l.char
+		ch := l.currentChar()
 		if ch != ' ' && ch != '\n' && ch != '\r' && ch != '\b' && ch != '\t' {
 			break
 		}
@@ -51,44 +45,44 @@ func (l *Lexer) consumeWhiteSpaceLineBreaks() {
 	}
 }
 
-func (l *Lexer) peekCurrPos() byte {
-	if l.currPos == len(l.Input) {
+func (l *Lexer) peekNextChar() byte {
+	if l.currPos+1 == len(l.Input) {
 		fmt.Printf("At end of input can't peek next character in the input stream! \n")
 	}
-	return l.Input[l.currPos]
+	return l.Input[l.currPos+1]
 }
 
 func (l *Lexer) makeHtmlElementToken(ttype token.TokenType) token.Token {
 
-	for l.char != '>' {
+	for l.currentChar() != '>' {
 		l.readChar()
 	}
 	// TODO do I need a pointer? Try out at the end of project
-	return token.Token{Type: ttype, StartPos: l.startPos - 1, EndPos: l.currPos - 1}
+	return token.Token{Type: ttype, StartPos: l.startPos, EndPos: l.currPos}
 }
 
 func (l *Lexer) makeContentToken() token.Token {
-	for l.peekCurrPos() != '<' {
+	for l.peekNextChar() != '<' {
 		l.readChar()
 	}
-	end := l.currPos - 1
+	end := l.currPos
 	// consume '<' so it gets loaded in lastConsumedChar
 	l.readChar()
-	return token.Token{Type: token.CONTENT, StartPos: l.startPos - 1, EndPos: end}
+	return token.Token{Type: token.CONTENT, StartPos: l.startPos, EndPos: end}
 }
 
 // TODO: USE TRIE here and refactor then makeHtmlElementToken
 func (l *Lexer) consumeTag() token.Token {
 	tok := token.Token{}
 
-	switch l.char {
+	switch l.currentChar() {
 
 	case '/':
 		l.readChar()
-		switch l.char {
+		switch l.currentChar() {
 		case 'a':
 			l.readChar()
-			switch l.char {
+			switch l.currentChar() {
 			case 'r':
 				tok = l.makeHtmlElementToken(token.CLOSED_ARTICLE)
 			case '>':
@@ -97,7 +91,7 @@ func (l *Lexer) consumeTag() token.Token {
 
 		case 'h':
 			l.readChar()
-			switch l.char {
+			switch l.currentChar() {
 			case 'e':
 				tok = l.makeHtmlElementToken(token.CLOSED_HEADER)
 			case '1':
@@ -108,7 +102,7 @@ func (l *Lexer) consumeTag() token.Token {
 	case 'a':
 
 		l.readChar()
-		switch l.char {
+		switch l.currentChar() {
 		case 'r':
 			tok = l.makeHtmlElementToken(token.OPEN_ARTICLE)
 		case ' ':
@@ -117,7 +111,7 @@ func (l *Lexer) consumeTag() token.Token {
 		}
 	case 'h':
 		l.readChar()
-		switch l.char {
+		switch l.currentChar() {
 		case 'e':
 			tok = l.makeHtmlElementToken(token.OPEN_HEADER)
 		case '1':
@@ -161,7 +155,7 @@ func (l *Lexer) NextToken() token.Token {
 
 func (l *Lexer) lexOutsideArticle() token.Token {
 	for {
-		switch l.char {
+		switch l.currentChar() {
 		case '<':
 			l.startPos = l.currPos - 1
 			l.readChar()
@@ -181,7 +175,7 @@ func (l *Lexer) lexOutsideArticle() token.Token {
 
 // Handles tokens between <article> ... </article>
 func (l *Lexer) lexInsideArticle() token.Token {
-	switch l.char {
+	switch l.currentChar() {
 	case '<':
 		l.readChar()
 		return l.consumeTag()
