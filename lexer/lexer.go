@@ -26,7 +26,6 @@ func New(input []byte) *Lexer {
 	return l
 }
 
-// ReadChar will load the curernt char in l.currentChar() and advance currPos to +1
 func (l *Lexer) readChar() {
 	l.currPos++
 }
@@ -57,7 +56,7 @@ func (l *Lexer) makeHtmlElementToken(ttype token.TokenType) token.Token {
 	for l.currentChar() != '>' {
 		l.readChar()
 	}
-	// TODO do I need a pointer? Try out at the end of project
+	// TODO: do I need a pointer? Try out at the end of project
 	return token.Token{Type: ttype, StartPos: l.startPos, EndPos: l.currPos}
 }
 
@@ -66,12 +65,12 @@ func (l *Lexer) makeContentToken() token.Token {
 		l.readChar()
 	}
 	end := l.currPos
-	// consume '<' so it gets loaded in lastConsumedChar
+
+	// consume '<'
 	l.readChar()
 	return token.Token{Type: token.CONTENT, StartPos: l.startPos, EndPos: end}
 }
 
-// TODO: USE TRIE here and refactor then makeHtmlElementToken
 func (l *Lexer) consumeTag() token.Token {
 	tok := token.Token{}
 
@@ -119,7 +118,7 @@ func (l *Lexer) consumeTag() token.Token {
 		}
 	}
 
-	// consume '>' and load next char into lexer.char
+	// consume '>'
 	l.readChar()
 
 	return tok
@@ -133,8 +132,6 @@ func (l *Lexer) NextToken() token.Token {
 		return tok
 	}
 
-	// See log 03/09/2025. whitespace, tabs,newlines, ... are not considered as content.
-	// Otherwise for 2 tags seperated by a newline the lexer will consider the newline as content
 	// up to the markdown converter to add tabs, enters,... where necessary
 	l.consumeWhiteSpaceLineBreaks()
 
