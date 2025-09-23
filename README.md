@@ -16,6 +16,25 @@ Maybe I'll generalize it, so it works with all sorts of blogs.
 - [ ] use channels : see one of my notes
 - [ ] use trie in lexer (see todo)
 
+### References
+
+[What is an idiomatic way of representing enums in Go?](https://stackoverflow.com/questions/14426366/what-is-an-idiomatic-way-of-representing-enums-in-go) \
+[Learning Go, and the `type` keyword is incredibly powerful and makes code more readable](https://www.reddit.com/r/golang/comments/1at369q/learning_go_and_the_type_keyword_is_incredibly/?share_id=o6o5D80TE1fQ8s9dnDslU&utm_content=2&utm_medium=android_app&utm_name=androidcss&utm_source=share&utm_term=2) \
+[moving from classes to golang](https://www.reddit.com/r/golang/comments/1ebcp85/moving_from_classes_to_golang/) \
+[labeld loops](https://stackoverflow.com/questions/46792159/labels-break-vs-continue-vs-goto)
+[mutable-strings-in-golang](https://medium.com/kokster/mutable-strings-in-golang-298d422d01bc) \
+[strings-in-golang](https://www.geeksforgeeks.org/go-language/strings-in-golang/) \
+[stack-overflow-how-to-check-value-in-map-go](https://stackoverflow.com/questions/2050391/how-to-check-if-a-map-contains-a-key-in-go) \
+[strings package of go](https://pkg.go.dev/strings?utm_source=chatgpt.com#HasPrefix) \
+[TRIE in crafting interpretres chapter 16](https://craftinginterpreters.com/scanning-on-demand.html#tries-and-state-machines) \
+[type keyword in go](https://stackoverflow.com/questions/53689968/what-exactly-does-the-type-keyword-do-in-go)\
+[go by example slices](https://gobyexample.com/slices)\
+[Arrays, slices (and strings): The mechanics of 'append'](https://go.dev/blog/slices)\
+[Go slices : usage and internals](https://go.dev/blog/slices-intro)\
+[regex is fun](https://pkg.go.dev/regexp)\
+
+Type definitions (not type aliases) zijn heel krachtig. Kan je bijvoorbeeld van een int een type maken specifiek voor je domein. Je type erft geen methods van het bovenliggen type en je kan je eigen methodes voor dat type specifieren. Verder kan je niet impliciet van int naar je type converten. Je moet **expliciet casten**. Verder type system info opzoeken en mee experimenteren. Waarschijnlijk ook meer lightweight dan maken van een class in Java. Per file kan je meerdere types definieren.
+
 ## DONE
 
 - [x] converter test outputs UNKNOWN token?
@@ -46,6 +65,13 @@ Maybe I'll generalize it, so it works with all sorts of blogs.
 - define html tags to scan (tokens)
 
 ## LOG -- quick notes, full of spelling mistakes and chaotic ramblings
+
+### 23/09/2025
+
+Hit a block with converting the anchor tag. Decided to expand the token and add a map of attributes that I just fill in in case of an open anchor tag. The issue is that I don't know the string libraries enough to lex the anchor tag in a good way. Buuuut, I saw somewhere that you can use regex to get substrings out of a string. The first anchor tag contains href, rel, title attributes and I think regex is the best way to parse that. downside is that I don't know regex. Upside, I always want to learn the basics of regex, so I've go the perfect excuse. I was starting to use the string library functions of go, but it seems a bit cumbersome to do waht I want to do.
+Maybe I just do it, so I get used to it as well. and If i have time and motivation left I implement a regex version as well.
+
+No I'll immediatly do the regex impl [regex is fun](https://pkg.go.dev/regexp)
 
 ### 21/09/2025
 
@@ -191,24 +217,6 @@ The more you nest readChar, the harder it is to have an overview of where in the
 
 Started writing the lexer. I miss writing with an LSP, but the good thing is that I seem to remember the syntax better, and I see the use of writing short concise names (which I am not doing at the moment). Now that I don't have an LSP, I am dependend on the error messages of the compiler, which shows how important error messages are. I feel like the error messages of the Rust compiler are better, but atm I don't like writing Rust.
 Learned about writing and running tests in Go, packages, ...
-
-### References
-
-[What is an idiomatic way of representing enums in Go?](https://stackoverflow.com/questions/14426366/what-is-an-idiomatic-way-of-representing-enums-in-go) \
-[Learning Go, and the `type` keyword is incredibly powerful and makes code more readable](https://www.reddit.com/r/golang/comments/1at369q/learning_go_and_the_type_keyword_is_incredibly/?share_id=o6o5D80TE1fQ8s9dnDslU&utm_content=2&utm_medium=android_app&utm_name=androidcss&utm_source=share&utm_term=2) \
-[moving from classes to golang](https://www.reddit.com/r/golang/comments/1ebcp85/moving_from_classes_to_golang/) \
-[labeld loops](https://stackoverflow.com/questions/46792159/labels-break-vs-continue-vs-goto)
-[mutable-strings-in-golang](https://medium.com/kokster/mutable-strings-in-golang-298d422d01bc) \
-[strings-in-golang](https://www.geeksforgeeks.org/go-language/strings-in-golang/) \
-[stack-overflow-how-to-check-value-in-map-go](https://stackoverflow.com/questions/2050391/how-to-check-if-a-map-contains-a-key-in-go) \
-[strings package of go](https://pkg.go.dev/strings?utm_source=chatgpt.com#HasPrefix) \
-[TRIE in crafting interpretres chapter 16](https://craftinginterpreters.com/scanning-on-demand.html#tries-and-state-machines) \
-[type keyword in go](https://stackoverflow.com/questions/53689968/what-exactly-does-the-type-keyword-do-in-go)\
-[go by example slices](https://gobyexample.com/slices)\
-[Arrays, slices (and strings): The mechanics of 'append'](https://go.dev/blog/slices)\
-[Go slices : usage and internals](https://go.dev/blog/slices-intro)\
-
-Type definitions (not type aliases) zijn heel krachtig. Kan je bijvoorbeeld van een int een type maken specifiek voor je domein. Je type erft geen methods van het bovenliggen type en je kan je eigen methodes voor dat type specifieren. Verder kan je niet impliciet van int naar je type converten. Je moet **expliciet casten**. Verder type system info opzoeken en mee experimenteren. Waarschijnlijk ook meer lightweight dan maken van een class in Java. Per file kan je meerdere types definieren.
 
 ### Mapping html to markdown
 

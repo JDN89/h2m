@@ -4,9 +4,10 @@ package token
 type TokenType int
 
 type Token struct {
-	Type     TokenType
-	StartPos int
-	EndPos   int
+	Type       TokenType
+	StartPos   int
+	EndPos     int
+	Attributes map[string]string
 }
 
 const (

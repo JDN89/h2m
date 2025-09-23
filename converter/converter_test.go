@@ -9,18 +9,16 @@ import (
 
 func TestConverter(t *testing.T) {
 
-	// input := `<article> 		<header>
-	// <h1>
-	//   <a href="/2015/02/01/what-color-is-your-function/" rel="bookmark" title="Permanent Link to What Color is Your Function?">
-	//     What Color is Your Function?
-	//   </a>
-	// </h1>
-	// </header> </article>`
-	input := `<article>
-	<h1> First time converting html to markdown </h1>
-	</article>`
+	input := `<article> 		<header>
+	<h1>
+	  <a href="/2015/02/01/what-color-is-your-function/" rel="bookmark" title="Permanent Link to What Color is Your Function?">
+	    What Color is Your Function?
+	  </a>
+	</h1>
+	</header> </article>`
 
-	output := `# First time converting html to markdown`
+	output := `
+# [What Color is Your Function?](/2015/02/01/what-color-is-your-function/ "Permanent Link to What Color is Your Function?")`
 
 	l := lexer.New([]byte(input))
 	c := New(l)

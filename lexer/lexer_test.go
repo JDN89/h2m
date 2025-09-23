@@ -5,6 +5,32 @@ import (
 	"testing"
 )
 
+// TODO: finish make anchor token
+func testLexAnchorToken(t *testing.T) {
+
+	input := `    <a href="/2015/02/01/what-color-is-your-function/" rel="bookmark" title="Permanent Link to What Color is Your Function?">
+   `
+
+	expectedAnchorToken := token.Token{
+		Type:     token.ANCHOR_OPEN,
+		StartPos: 1,
+		EndPos:   108,
+		Attributes: map[string]string{
+			"href":  "/2015/02/01/what-color-is-your-function/",
+			"rel":   "bookmark",
+			"title": "Permanent Link to What Color is Your Function?",
+		},
+	}
+
+	l := New([]byte(input))
+	result := l.NextToken()
+
+	if result.Type != expectedAnchorToken.Type {
+		t.Errorf("tests compare token number[%d] - token type wrong. expected %s, got=%s", token.TokenType.ToString(expectedAnchorToken.Type), token.TokenType.ToString(result.Type))
+	}
+
+}
+
 func TestGetNextToken(t *testing.T) {
 	input := `<article> 		<header>
 	<h1>

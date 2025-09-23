@@ -51,11 +51,24 @@ func (l *Lexer) peekNextChar() byte {
 	return l.Input[l.currPos+1]
 }
 
+// TODO : finish make anchor token
+// func (l *Lexer) makeAnchortoken(token.TokenType) token.Token {
+// 	for l.currentChar() != '>' {
+// 		l.readChar()
+// 	}
+//
+// 	//consume the whole anchor tag and convert to string
+// 	slice := string(l.Input[l.startPos:l.currPos])
+//
+// 	if strings.Contains(slice, "href=") {
+// 		strings.Split(slice, "href=")
+// 	}
+// 	strings.Split(slice)
+//
+// }
+
 func (l *Lexer) makeHtmlElementToken(ttype token.TokenType) token.Token {
 
-	for l.currentChar() != '>' {
-		l.readChar()
-	}
 	// TODO: do I need a pointer? Try out at the end of project
 	return token.Token{Type: ttype, StartPos: l.startPos, EndPos: l.currPos}
 }
