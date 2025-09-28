@@ -1,0 +1,35 @@
+package playground
+
+import (
+	"fmt"
+	"regexp"
+)
+
+func ParseHref(input []byte) map[string]string {
+
+	attributes := make(map[string]string)
+
+	var hrefRe = regexp.MustCompile(`href="([^"]+)"`)
+	var relRe = regexp.MustCompile(`rel="([^"]+)"`)
+	var titleRe = regexp.MustCompile(`title="([^"]+)"`)
+
+	// FindSubmatch returns the whole match and then the capture groups if any are found
+	href := hrefRe.FindSubmatch(input)
+	rel := relRe.FindSubmatch(input)
+	title := titleRe.FindSubmatch(input)
+
+	if len(href) > 1 {
+		attributes["href"] = string(rel[1])
+	}
+	if len(rel) > 1 {
+		attributes["rel"] = string(rel[1])
+	}
+	if len(title) > 1 {
+		attributes["title"] = string(title[1])
+	}
+
+	fmt.Println(attributes["href"])
+
+	return attributes
+
+}
