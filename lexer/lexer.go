@@ -3,6 +3,7 @@ package lexer
 import (
 	"fmt"
 	"h2m/token"
+	"regexp"
 )
 
 type Mode int
@@ -52,20 +53,35 @@ func (l *Lexer) peekNextChar() byte {
 }
 
 // TODO : finish make anchor token
-// func (l *Lexer) makeAnchortoken(token.TokenType) token.Token {
-// 	for l.currentChar() != '>' {
-// 		l.readChar()
-// 	}
-//
-// 	//consume the whole anchor tag and convert to string
-// 	slice := string(l.Input[l.startPos:l.currPos])
-//
-// 	if strings.Contains(slice, "href=") {
-// 		strings.Split(slice, "href=")
-// 	}
-// 	strings.Split(slice)
-//
-// }
+func (l *Lexer) makeAnchortoken(ttype token.TokenType) token.Token {
+	for l.currentChar() != '>' {
+		l.readChar()
+	}
+
+	//consume the whole anchor tag and convert to string
+	anchorSlice := string(l.Input[l.startPos:l.currPos])
+
+	hrefRegexPatterns := map[string]*regexp.Regexp{
+
+		"href":  regexp.MustCompile(`href="([^"]+)"`),
+		"rel":   regexp.MustCompile(`rel="([^"]+)"`),
+		"title": regexp.MustCompile(`title="([^"]+)"`),
+	}
+
+	hrefAttributes := make(map[string]string)
+
+	// FindSubmatch returns the whole match and then the capture groups if any are found
+	for key, regex := range hrefRegexPatterns {
+		attributeMatch := regex.FindSubmatch([]byte(anchorSlice))
+		if len(attributeMatch) > 1 {
+			hrefAttributes[key] = string(attributeMatch[1])
+		}
+
+	}
+
+	return token.Token{Type: ttype, StartPos: l.startPos, EndPos: l.currPos, Attributes: hrefAttributes}
+
+}
 
 func (l *Lexer) makeHtmlElementToken(ttype token.TokenType) token.Token {
 
@@ -118,7 +134,7 @@ func (l *Lexer) consumeTag() token.Token {
 		case 'r':
 			tok = l.makeHtmlElementToken(token.OPEN_ARTICLE)
 		case ' ':
-			tok = l.makeHtmlElementToken(token.ANCHOR_OPEN)
+			tok = l.makeAnchortoken(token.ANCHOR_OPEN)
 
 		}
 	case 'h':
