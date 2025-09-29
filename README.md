@@ -66,6 +66,13 @@ Type definitions (not type aliases) zijn heel krachtig. Kan je bijvoorbeeld van 
 
 ## LOG -- quick notes, full of spelling mistakes and chaotic ramblings
 
+### 29/09/2025
+
+The first time in forever that I have underarm pain from using my mouse.
+
+NOt much done today. The past days I was reading some regex reference guides and doing some tutorials. I managed to parse the href attributes, via regexp, and put them in the token.Attributes.
+Fix the broken lexer later, Arm is to messed up.
+
 ### 23/09/2025
 
 Hit a block with converting the anchor tag. Decided to expand the token and add a map of attributes that I just fill in in case of an open anchor tag. The issue is that I don't know the string libraries enough to lex the anchor tag in a good way. Buuuut, I saw somewhere that you can use regex to get substrings out of a string. The first anchor tag contains href, rel, title attributes and I think regex is the best way to parse that. downside is that I don't know regex. Upside, I always want to learn the basics of regex, so I've go the perfect excuse. I was starting to use the string library functions of go, but it seems a bit cumbersome to do waht I want to do.
