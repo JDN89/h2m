@@ -27,6 +27,33 @@ func New(input []byte) *Lexer {
 	return l
 }
 
+func (l *Lexer) NextToken() token.Token {
+	// if for some reason </article> was the last html tag. Then we don't immediatly hit MODE DONE
+	// MODE done is to exit early when we parsed the closing article html tag
+	// In my test cases </article> is often the last token, so we hit this if condition before we reach MODE_DONE
+	// My test cases will be more realistic once i parse the whole blog
+	if l.currPos >= len(l.Input) {
+		return token.Token{Type: token.EOF, StartPos: l.currPos, EndPos: l.currPos}
+	}
+
+	// up to the markdown converter to add tabs, enters,... where necessary
+	l.consumeWhiteSpaceLineBreaks()
+
+	l.startPos = l.currPos
+
+	switch l.mode {
+
+	case MODE_DONE:
+		return token.Token{Type: token.EOF, StartPos: l.startPos, EndPos: l.currPos}
+	case MODE_INSIDE_ARTICLE:
+		return l.lexInsideArticle()
+	case MODE_OUTSIDE_ARTICLE:
+		return l.lexOutsideArticle()
+	default:
+		panic(fmt.Sprintf("unexpected lexer.Mode: %#v", l.mode))
+	}
+}
+
 func (l *Lexer) readChar() {
 	l.currPos++
 }
@@ -52,7 +79,6 @@ func (l *Lexer) peekNextChar() byte {
 	return l.Input[l.currPos+1]
 }
 
-// TODO : finish make anchor token
 func (l *Lexer) makeAnchortoken(ttype token.TokenType) token.Token {
 	for l.currentChar() != '>' {
 		l.readChar()
@@ -85,7 +111,9 @@ func (l *Lexer) makeAnchortoken(ttype token.TokenType) token.Token {
 
 func (l *Lexer) makeHtmlElementToken(ttype token.TokenType) token.Token {
 
-	// TODO: do I need a pointer? Try out at the end of project
+	for l.currentChar() != '>' {
+		l.readChar()
+	}
 	return token.Token{Type: ttype, StartPos: l.startPos, EndPos: l.currPos}
 }
 
@@ -153,37 +181,10 @@ func (l *Lexer) consumeTag() token.Token {
 	return tok
 }
 
-func (l *Lexer) NextToken() token.Token {
-	tok := token.Token{}
-
-	if l.currPos >= len(l.Input) {
-		tok = token.Token{Type: token.EOF, StartPos: l.currPos}
-		return tok
-	}
-
-	// up to the markdown converter to add tabs, enters,... where necessary
-	l.consumeWhiteSpaceLineBreaks()
-
-	l.startPos = l.currPos
-
-	switch l.mode {
-
-	case MODE_DONE:
-		return token.Token{Type: token.EOF, StartPos: l.currPos}
-	case MODE_INSIDE_ARTICLE:
-		return l.lexInsideArticle()
-	case MODE_OUTSIDE_ARTICLE:
-		return l.lexOutsideArticle()
-	default:
-		panic(fmt.Sprintf("unexpected lexer.Mode: %#v", l.mode))
-	}
-}
-
 func (l *Lexer) lexOutsideArticle() token.Token {
 	for {
 		switch l.currentChar() {
 		case '<':
-			l.startPos = l.currPos - 1
 			l.readChar()
 			tok := l.consumeTag()
 			if tok.Type == token.OPEN_ARTICLE {
@@ -191,8 +192,8 @@ func (l *Lexer) lexOutsideArticle() token.Token {
 				return tok
 			}
 			return tok
-		case 0:
-			return token.Token{Type: token.EOF, StartPos: l.currPos}
+		// case 0:
+		// 	return token.Token{Type: token.EOF, StartPos: l.currPos}
 		default:
 			l.readChar()
 		}
@@ -204,9 +205,14 @@ func (l *Lexer) lexInsideArticle() token.Token {
 	switch l.currentChar() {
 	case '<':
 		l.readChar()
-		return l.consumeTag()
-	case 0:
-		return token.Token{Type: token.EOF, StartPos: l.currPos}
+		tok := l.consumeTag()
+		if tok.Type == token.CLOSED_ARTICLE {
+			l.mode = MODE_DONE
+		}
+		return tok
+
+	// case 0:
+	// 	return token.Token{Type: token.EOF, StartPos: l.currPos}
 	default:
 		return l.makeContentToken()
 	}

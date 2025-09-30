@@ -5,6 +5,43 @@ import (
 	"testing"
 )
 
+// func TestFixLexer(t *testing.T) {
+// 	input := `<article> <h1> </h1> </article>`
+//
+// 	// expected token types and positions
+// 	expected := []struct {
+// 		typ      token.TokenType
+// 		startPos int
+// 		endPos   int
+// 	}{
+// 		{token.OPEN_ARTICLE, 0, 8},          // "<article>"
+// 		{token.OPEN_HEADING_1, 10, 13},      // "<h1>"
+// 		{token.CLOSED_HEADING_1, 15, 19},    // "</h1>"
+// 		{token.CLOSED_ARTICLE, 21, 30},      // "</article>"
+// 		{token.EOF, len(input), len(input)}, // end of input
+// 	}
+//
+// 	l := New([]byte(input))
+//
+// 	for i, exp := range expected {
+// 		tok := l.NextToken()
+//
+// 		if tok.Type != exp.typ {
+// 			t.Errorf("token[%d] type mismatch: expected %s, got %s",
+// 				i,
+// 				token.TokenType.ToString(exp.typ),
+// 				token.TokenType.ToString(tok.Type),
+// 			)
+// 		}
+//
+// 		if tok.StartPos != exp.startPos || tok.EndPos != exp.endPos {
+// 			t.Errorf("token[%d] position mismatch: expected (%d,%d), got (%d,%d)",
+// 				i, exp.startPos, exp.endPos, tok.StartPos, tok.EndPos,
+// 			)
+// 		}
+// 	}
+// }
+
 func TestGetNextToken(t *testing.T) {
 	input := `<article> 		<header>
 	<h1>

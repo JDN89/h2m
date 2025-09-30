@@ -66,6 +66,10 @@ Type definitions (not type aliases) zijn heel krachtig. Kan je bijvoorbeeld van 
 
 ## LOG -- quick notes, full of spelling mistakes and chaotic ramblings
 
+### 30/09/2025
+
+Fixed the lexer. For some reason, I thought the lexer allready worked correctly in the past. Looking at my log of 21/09/2025. zero deaths refactor? The fuck Jan - zeker moe? Anyway, fixed it this time - first attempt refactor (but not really)
+
 ### 29/09/2025
 
 The first time in forever that I have underarm pain from using my mouse.
