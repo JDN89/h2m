@@ -18,17 +18,17 @@ func TestConverter(t *testing.T) {
 	</header> </article>`
 
 	output := `
-# [What Color is Your Function?](/2015/02/01/what-color-is-your-function/ "Permanent Link to What Color is Your Function?")`
+# [What Color is Your Function?](What Color is Your Function?")`
 
 	l := lexer.New([]byte(input))
 	c := New(l)
 	c.CollectTokens()
 	result := c.ConvertToMarkdown()
 	if !bytes.Equal(result, []byte(output)) {
-		fmt.Printf("result -- %s", result)
+		fmt.Printf("result -- %s \n \n", result)
 	}
 	c.ConvertToMarkdown()
 
-	fmt.Printf("result -- %s", result)
-	fmt.Println("Done running TestConverter")
+	fmt.Printf("result -- %s \n \n", result)
+	fmt.Println("Done running TestConverter ")
 }

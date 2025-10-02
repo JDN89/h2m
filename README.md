@@ -66,6 +66,13 @@ Type definitions (not type aliases) zijn heel krachtig. Kan je bijvoorbeeld van 
 
 ## LOG -- quick notes, full of spelling mistakes and chaotic ramblings
 
+### 02/10/2025
+
+[learned about the title attribute in an anchor tag](https://www.w3schools.com/html/html_links.asp) : The title attribute specifies extra information about an element. The information is most often shown as a tooltip text when the mouse moves over the element.
+[also learned bout the rel attribute](https://www.w3schools.com/TAGS/att_a_rel.asp) The rel attribute specifies the relationship between the current document and the linked document. Only used when href attribute is present.
+
+For my markdown I don't need those so I could just skip these attributes. I am also thinking of ignoring href wrapped inside headers. But for now I'll leave them in and I'll reconsider once the converter is finished.
+
 ### 30/09/2025
 
 Fixed the lexer. For some reason, I thought the lexer allready worked correctly in the past. Looking at my log of 21/09/2025. zero deaths refactor? The fuck Jan - zeker moe? Anyway, fixed it this time - first attempt refactor (but not really)

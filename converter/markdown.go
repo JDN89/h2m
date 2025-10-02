@@ -16,6 +16,8 @@ var HtmlTokenTypeToMarkdownEquivalentMap = map[token.TokenType]string{
 func GetMarkdown(t token.TokenType) string {
 	if val, ok := HtmlTokenTypeToMarkdownEquivalentMap[t]; ok {
 		return val
+	} else {
+		// fmt.Printf("No markdown equivalent defined for %s \n", token.TokenType.ToString(t))
+		return "No markdown equivalent defined for -- " + token.TokenType.ToString(t) + " \n"
 	}
-	return "No markdown equivalent defined"
 }
