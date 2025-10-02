@@ -14,8 +14,10 @@ func New(l *lexer.Lexer) *Converter {
 	return &Converter{
 		lexer:  l,
 		tokens: []token.Token{},
-		// TODO: add curToken: int
-		// TODO: add nextToken: int
+
+		//TODO: add pos int
+		// TODO: add curToken: token
+		// TODO: add nextToken: token
 	}
 }
 

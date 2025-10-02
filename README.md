@@ -5,6 +5,7 @@ Maybe I'll generalize it, so it works with all sorts of blogs.
 
 ## TODO
 
+- [ ] I haven't used interfaces at all and don't remember how they work in go. Are they similar to java interfaces? look into it and see if i have a usecase for them here.
 - [ ] output markdown
 - [ ] create todos based on my comment of 21/08/2025
 - [ ] If I want to be able to get rid of the bloat inside html tags. I must store the beginning of the tag but also of the content. Or mayby I don't need to store the conent, and storing the start and endo of the tags is just enough, and I just replace the complete tag with the equivalent markdown content.
@@ -67,6 +68,21 @@ Type definitions (not type aliases) zijn heel krachtig. Kan je bijvoorbeeld van 
 ## LOG -- quick notes, full of spelling mistakes and chaotic ramblings
 
 ### 02/10/2025
+
+** NO POINTERS**
+
+[value receiver vs pointer receiver](https://stackoverflow.com/questions/27775376/value-receiver-vs-pointer-receiver?utm_source=chatgpt.com) \
+[using pointers vs copy in struct functions](https://stackoverflow.com/questions/22685062/using-pointers-vs-copy-in-struct-functions) \
+
+`For example, you could define an interface that defined the Log() method and create a variable of this type. Then you could assign an instance of the Logger structure to that variable. You could also assign a pointer to an instance of the Logger structure to this variable. Both would work, because the Log() method is callable from both instances of the structure and pointers to instances. If the method took a pointer argument, then you would only be able to call it on pointers. It’s therefore good style in Go to only require methods to take a pointer when they modify the structure, or if the structure is so large that copying it on every method call would be prohibitive...`
+
+- copying small structs is cheap
+- no pointer juggling
+- pointer can be usefull if I want to mutate the value
+
+In the converter I am at the moment just using a for loop and indexing into the tokens one by one.
+I think that it's better to work with next token and current token. I don't wat to start peeking the next token (in some cases) inside my for loop. So i'll add currToken and nextToken to my converter struct. and just keep looping as long as token.type is not EOF. maybe currToken and nextToken should be the actual token or a pointer to the actual tokens?
+Now that I think about it, I think the same approach was used in `crafting your own `
 
 [learned about the title attribute in an anchor tag](https://www.w3schools.com/html/html_links.asp) : The title attribute specifies extra information about an element. The information is most often shown as a tooltip text when the mouse moves over the element.
 [also learned bout the rel attribute](https://www.w3schools.com/TAGS/att_a_rel.asp) The rel attribute specifies the relationship between the current document and the linked document. Only used when href attribute is present.
