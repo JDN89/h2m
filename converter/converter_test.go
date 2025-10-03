@@ -25,10 +25,8 @@ func TestConverter(t *testing.T) {
 	c.CollectTokens()
 	result := c.ConvertToMarkdown()
 	if !bytes.Equal(result, []byte(output)) {
-		fmt.Printf("result -- %s \n \n", result)
+		t.Fatalf("result -- %s \n \n", result)
 	}
-	c.ConvertToMarkdown()
 
-	fmt.Printf("result -- %s \n \n", result)
 	fmt.Println("Done running TestConverter ")
 }

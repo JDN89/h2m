@@ -67,6 +67,14 @@ Type definitions (not type aliases) zijn heel krachtig. Kan je bijvoorbeeld van 
 
 ## LOG -- quick notes, full of spelling mistakes and chaotic ramblings
 
+### 03/10/2025
+
+Just finished refactoring the converter and converting the h1 to markdown. From now on it's just finishing lexing the other html tags I haven't defined and encountered yet and then map those tags to markdown in the converter. The "hardest" parts is done. After this it's just some refactoring and maybe messing around with go channels for fun. I don't think they'll speed up the lexer for small blogs. Niet veel zin om channel op te zetten. De kost van het opspinnen van een channel en alles aan elkaar the chainen zal waarschijnlijk langzamer zijn dan dat ik alles sequentieel uitvoer. Dit is geen Compiler waar je source files apart kan lexen en dan de resultaten aan elkaar kan stitchen.
+
+Ik ga wel nog eens de interface documentatie lezen. Want ik herinner mij hier niets van en ik heb tot nu toe nog geen usecase gezien voor het implementeren van een interface wat waarschijnlijk niet klopt!!
+
+Al bij al een goede vrijdagavond
+
 ### 02/10/2025
 
 ** NO POINTERS**

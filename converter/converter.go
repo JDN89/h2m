@@ -1,61 +1,89 @@
 package converter
 
 import (
+	"fmt"
 	"h2m/lexer"
 	"h2m/token"
 )
 
 type Converter struct {
-	lexer  *lexer.Lexer
-	tokens []token.Token
+	lexer *lexer.Lexer
+	//TODO: convert to go chan . so the converter owns a go channel
+	tokens    []token.Token
+	pos       int // position of nextToken
+	currToken token.Token
+	nextToken token.Token
 }
 
 func New(l *lexer.Lexer) *Converter {
-	return &Converter{
+	c := Converter{
 		lexer:  l,
 		tokens: []token.Token{},
-
-		//TODO: add pos int
-		// TODO: add curToken: token
-		// TODO: add nextToken: token
+		pos:    0,
 	}
+
+	c.CollectTokens()
+	c.currToken = c.tokens[c.pos]
+	c.pos++
+	c.nextToken = c.tokens[c.pos]
+	return &c
 }
 
 func (c *Converter) CollectTokens() {
-	for tok := c.lexer.NextToken(); tok.Type != token.EOF; tok = c.lexer.NextToken() {
+
+	// infinit for loop. similar to while(;;) in C. Just keep looping until you enter the EOF token
+	for {
+		tok := c.lexer.NextToken()
+
 		c.tokens = append(c.tokens, tok)
+		if tok.Type == token.EOF {
+			break
+		}
+
 	}
+}
+
+func (c *Converter) advance() {
+	c.pos++
+	c.currToken = c.nextToken
+	c.nextToken = c.tokens[c.pos]
 }
 
 func (c *Converter) ConvertToMarkdown() []byte {
 
-	converted := []byte{}
+	markdown := []byte{}
 
-	for i := 0; i <= len(c.tokens)-1; i++ {
+	for c.nextToken.Type != token.EOF {
 
-		tok := c.tokens[i]
+		tok := c.currToken
+
 		switch tok.Type {
 		case token.CONTENT:
 			contentSlice := c.lexer.Input[tok.StartPos:tok.EndPos]
-			converted = append(converted, contentSlice...)
+			markdown = append(markdown, contentSlice...)
 		case token.ANCHOR_OPEN:
 
-			// TODO: peek next token. It should be content and if not throw an error for now
-			converted = append(converted, '[')
+			markdown = append(markdown, '[')
 			if href, ok := tok.Attributes["href"]; ok {
-				converted = append(converted, []byte(href)...)
+				markdown = append(markdown, []byte(href)...)
+			} else {
+				fmt.Printf("The ANCHOR_OPEN token didn't contain a href key value pair! \n")
 			}
-			converted = append(converted, ']')
-			// TODO: convert so that we go over tokens and also use peekToken. Now we just go over the tokens sequentially with a for loop, but I think it would be nicer if also here we keep calling advance and use a while statment for end not reach of converTokens bla bla bla. advance
-			// I am used to working with C where we can use pointers. but here we don't have a pointer for the array so we still have to keep track of the indexes. so add them to the converter and increment them.
+			markdown = append(markdown, ']')
+			if c.nextToken.Type == token.CONTENT {
+				// consume the currentToken
+				c.advance()
+				markdown = append(markdown, '(')
+				contentSlice := c.lexer.Input[c.currToken.StartPos:c.currToken.EndPos]
+				markdown = append(markdown, contentSlice...)
+			} else {
+				fmt.Printf("Expected Content token but got: %s \n", token.TokenType.ToString(c.nextToken.Type))
+			}
 
 		default:
-
-			converted = append(converted, []byte(GetMarkdown(tok.Type))...)
+			markdown = append(markdown, []byte(GetMarkdown(tok.Type))...)
 		}
-		// ttypeString := c.tokens[i].Type.ToString()
-		// fmt.Println(ttypeString)
+		c.advance()
 	}
-
-	return converted
+	return markdown
 }
