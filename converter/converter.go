@@ -74,8 +74,10 @@ func (c *Converter) ConvertToMarkdown() []byte {
 				// consume the currentToken
 				c.advance()
 				markdown = append(markdown, '(')
-				contentSlice := c.lexer.Input[c.currToken.StartPos:c.currToken.EndPos]
+				// the endPos in contentToken is right before the '<'. in slice [x:y], the y value is not included. So + 1
+				contentSlice := c.lexer.Input[c.currToken.StartPos : c.currToken.EndPos+1]
 				markdown = append(markdown, contentSlice...)
+				markdown = append(markdown, ')')
 			} else {
 				fmt.Printf("Expected Content token but got: %s \n", token.TokenType.ToString(c.nextToken.Type))
 			}

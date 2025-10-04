@@ -5,12 +5,15 @@ import (
 )
 
 var HtmlTokenTypeToMarkdownEquivalentMap = map[token.TokenType]string{
+	token.OPEN_HEADER:      "",
+	token.CLOSED_HEADER:    "",
 	token.OPEN_HEADING_1:   "# ",
 	token.CONTENT:          "",
-	token.CLOSED_HEADING_1: "  \n",
+	token.CLOSED_HEADING_1: "\n",
 	token.EOF:              "",
 	token.OPEN_ARTICLE:     "",
 	token.CLOSED_ARTICLE:   "",
+	token.ANCHOR_CLOSED:    "",
 }
 
 func GetMarkdown(t token.TokenType) string {

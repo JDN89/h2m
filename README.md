@@ -33,6 +33,7 @@ Maybe I'll generalize it, so it works with all sorts of blogs.
 [Arrays, slices (and strings): The mechanics of 'append'](https://go.dev/blog/slices)\
 [Go slices : usage and internals](https://go.dev/blog/slices-intro)\
 [regex is fun](https://pkg.go.dev/regexp)\
+[How to remove redundant spaces/whitespace from a string in Golang?](https://stackoverflow.com/questions/37290693/how-to-remove-redundant-spaces-whitespace-from-a-string-in-golang?utm_source=chatgpt.com) \
 
 Type definitions (not type aliases) zijn heel krachtig. Kan je bijvoorbeeld van een int een type maken specifiek voor je domein. Je type erft geen methods van het bovenliggen type en je kan je eigen methodes voor dat type specifieren. Verder kan je niet impliciet van int naar je type converten. Je moet **expliciet casten**. Verder type system info opzoeken en mee experimenteren. Waarschijnlijk ook meer lightweight dan maken van een class in Java. Per file kan je meerdere types definieren.
 
@@ -66,6 +67,10 @@ Type definitions (not type aliases) zijn heel krachtig. Kan je bijvoorbeeld van 
 - define html tags to scan (tokens)
 
 ## LOG -- quick notes, full of spelling mistakes and chaotic ramblings
+
+### 04/10/2025
+
+For my converter test I was comparing the converted byte stream to the expected byte stream. Which was very error prone. As soon as there was a space, newline,... to many the bytes didn't match. My test was to strict. I found a way to normalize the output and compare it with a normalized expected output. [How to remove redundant spaces/whitespace from a string in Golang?](https://stackoverflow.com/questions/37290693/how-to-remove-redundant-spaces-whitespace-from-a-string-in-golang?utm_source=chatgpt.com)
 
 ### 03/10/2025
 
